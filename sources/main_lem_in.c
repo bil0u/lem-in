@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:37:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/08 06:21:15 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/08 06:40:41 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,17 @@ void	print_graph(t_lgraph *graph)
 	t_list	*tmp;
 	t_room	*curr;
 
-	ft_printf("{yellow}%d{eoc} nodes | start = {green}%p{eoc} | end = {red}%p{eoc}\n", graph->nb_nodes, graph->start, graph->end);
+	ft_printf("---- {red}GRAPH{eoc} ----\n");
+	ft_printf("{yellow}%d{eoc} nodes | start = {green}%p{eoc} | end = {blue}%p{eoc}\n", graph->nb_nodes, graph->start, graph->end);
 	tmp = graph->nodes;
-	ft_printf("NODES:\n\n -->  ");
+	ft_printf("+->  ");
 	while (tmp != NULL)
 	{
 		curr = (t_room *)tmp->content;
-		ft_printf("[{cyan}%d{eoc},{cyan}%d{eoc}] : '{magenta}%s{eoc}'  -->  ", curr->coord_x, curr->coord_y, curr->name);
+		ft_printf("{'{magenta}%s{eoc}' ({cyan}%d{eoc},{cyan}%d{eoc})}  -->  ", curr->name, curr->coord_x, curr->coord_y);
 		tmp = tmp->next;
 	}
-	ft_printf("NULL\n---\n");
+	ft_printf("{red}NULL{eoc}\n---------------\n");
 }
 
 /*

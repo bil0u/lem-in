@@ -6,13 +6,14 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/07 22:50:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/08 06:21:39 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/08 06:30:18 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include "lem_in.h"
 #include "parsing.h"
+#include "struct_utils.h"
 
 static int		is_room(t_pdata *dat)
 {

@@ -6,41 +6,52 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:42:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/05 11:58:11 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/08 05:48:47 by Bilou            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "filler.h"
+#include <stdlib.h>
+#include "lem_in.h"
 
-int		**init_matrix(int nb_lines)
+int				**init_matrix(int nb_nodes)
 {
 	int		**new;
 	int		i;
 
-	if ((new = ft_memalloc(nb_lines * sizeof(*new)) == NULL)
+	if ((new = ft_memalloc(nb_nodes * sizeof(*new))) == NULL)
 		exit(ERROR);
-	i = 0;
-	while (i < nb_lines)
+	i = nb_nodes;
+	while (i--)
 	{
-		if ((new[i] = ft_memalloc(nb_lines * sizeof(**new)) == NULL)
+		if ((new[i] = ft_memalloc(nb_nodes * sizeof(**new))) == NULL)
 			exit(ERROR);
-		i++;
 	}
 	return (new);
 }
 
-void	del_matrix(int **tab, int nb_lines)
+static void		del_matrix(int **tab, int nb_nodes)
 {
-	while (nb_lines--)
-		ft_memdel(&(tab[nb_lines]));
-	ft_memdel(&(tab));
+	if (tab)
+	{
+		while (nb_nodes--)
+			ft_memdel((void **)&(tab[nb_nodes]));
+		ft_memdel((void **)tab);
+	}
 }
 
-void	node_cleaner(void *content, size_t size)
+static void		node_cleaner(void *content, size_t size)
 {
 	t_room	*node;
 
 	node = (t_room *)content;
 	ft_strdel(&(node->name));
+	ft_memdel(&content);
 	(void)size;
+}
+
+void			env_cleaner(t_lenv *env)
+{
+	ft_lstdel(&(env->graph.nodes), &node_cleaner);
+	del_matrix(env->graph.links, env->graph.nb_nodes);
+	ft_memset(env, 0, sizeof(*env));
 }

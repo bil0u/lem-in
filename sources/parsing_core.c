@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/07 22:50:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/08 06:30:18 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/08 21:21:30 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,18 +78,36 @@ static void		get_roomdata(t_pdata *dat, t_lgraph *graph)
 	}
 }
 
-static void		get_linkdata()
+static void		get_linkdata(t_pdata *dat, t_lgraph *graph)
 {
+	char	*separator;
+	char	*tmp1;
+	char	*tmp2;
 
+	if ((separator = ft_strchr(dat->buff, '-')) != NULL)
+	{
+		tmp1 = ft_strndup(dat->buff, separator - dat->buff);
+		tmp2 = ft_strdup(separator + 1);
+		if (get_index(dat, graph, tmp1, tmp2) == TRUE)
+			graph->links[dat->tmp_x][dat->tmp_y] = 1;
+		else
+			BSET(dat->flags, DATA_ERROR);
+		ft_strdel(&tmp1);
+		ft_strdel(&tmp2);
+	}
+	else
+		BSET(dat->flags, DATA_ERROR);
 }
 
 void			get_input(t_pdata *dat, t_lenv *env)
 {
 	ft_putendl(dat->buff);
+	dat->to_save = NULL;
 	if (dat->buff[0] != '#' && !BIS_SET(dat->flags, ROOM_DONE) && !is_room(dat))
 	{
 		BSET(dat->flags, ROOM_DONE);
 		env->graph.links = init_matrix(env->graph.nb_nodes);
+		ft_strdel(&(dat->to_save));
 	}
 	if (dat->buff[0] == '#')
 		get_hashdata(dat);
@@ -99,7 +117,7 @@ void			get_input(t_pdata *dat, t_lenv *env)
 		apply_commands(dat, &(env->graph));
 	}
 	else if (ft_strchr(dat->buff, '-'))
-		get_linkdata();
+		get_linkdata(dat, &(env->graph));
 	else
 		BSET(dat->flags, DATA_ERROR);
 	ft_strdel(&(dat->buff));

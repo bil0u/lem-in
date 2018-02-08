@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:37:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/08 06:40:41 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/08 21:31:48 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,38 @@ void	print_graph(t_lgraph *graph)
 {
 	t_list	*tmp;
 	t_room	*curr;
+	int		i;
+	int		j;
 
 	ft_printf("---- {red}GRAPH{eoc} ----\n");
 	ft_printf("{yellow}%d{eoc} nodes | start = {green}%p{eoc} | end = {blue}%p{eoc}\n", graph->nb_nodes, graph->start, graph->end);
 	tmp = graph->nodes;
 	ft_printf("+->  ");
+	i = 0;
 	while (tmp != NULL)
 	{
 		curr = (t_room *)tmp->content;
-		ft_printf("{'{magenta}%s{eoc}' ({cyan}%d{eoc},{cyan}%d{eoc})}  -->  ", curr->name, curr->coord_x, curr->coord_y);
+		ft_printf("{[%d]'{magenta}%s{eoc}' ({cyan}%d{eoc},{cyan}%d{eoc})}  -->  ", i, curr->name, curr->coord_x, curr->coord_y);
 		tmp = tmp->next;
+		i++;
 	}
-	ft_printf("{red}NULL{eoc}\n---------------\n");
+	ft_printf("{red}NULL{eoc}\n");
+	if (graph->links != NULL)
+	{
+		i = 0;
+		while (i < graph->nb_nodes)
+		{
+			j = 0;
+			while (j < graph->nb_nodes)
+			{
+				ft_printf("%d ", graph->links[i][j]);
+				j++;
+			}
+			ft_putchar('\n');
+			i++;
+		}
+	}
+	ft_printf("---------------\n");
 }
 
 /*

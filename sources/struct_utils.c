@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:42:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/08 06:21:32 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/08 21:23:07 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ static void		del_matrix(int **tab, int nb_nodes)
 	if (tab)
 	{
 		while (nb_nodes--)
-			ft_memdel((void **)&(tab[nb_nodes]));
-		ft_memdel((void **)tab);
+			free(tab[nb_nodes]);
+		free(tab);
 	}
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_core.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Bilou <Bilou@student.42.fr>                +#+  +:+       +#+        */
+/*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/07 22:50:30 by Bilou             #+#    #+#             */
-/*   Updated: 2018/02/08 05:58:35 by Bilou            ###   ########.fr       */
+/*   Created: 2018/02/07 22:50:30 by upopee            #+#    #+#             */
+/*   Updated: 2018/02/08 06:21:39 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static void		get_roomdata(t_pdata *dat, t_lgraph *graph)
 
 static void		get_linkdata()
 {
-	
+
 }
 
 void			get_input(t_pdata *dat, t_lenv *env)

@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/02/05 11:00:14 by upopee           ###   ########.fr        #
+#    Updated: 2018/02/08 03:32:55 by Bilou            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ NAME = lem-in
 CC = gcc
 
 # Flags
-CFLAGS = -Wall -Wextra -Wall $(INCLUDES)
+CFLAGS = -Wall -Wextra -Wall $(INCLUDES) -g
 LFLAGS =  -lft -L $(LIB_DIR)
 
 # Library paths
@@ -35,6 +35,9 @@ INCLUDES = -I $(INCLUDES_DIR) -I $(LIB_INCLUDES_DIR)
 
 # Sources files
 FILES =		main_lem_in \
+			struct_utils \
+			parsing_core \
+			parsing_utils \
 
 SOURCES = $(patsubst %,$(SRC_DIR)/%,$(FILES:=.c))
 SRC_DIR = sources

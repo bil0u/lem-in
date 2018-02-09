@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/07 22:50:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/08 21:21:30 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/09 14:48:36 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,19 +81,17 @@ static void		get_roomdata(t_pdata *dat, t_lgraph *graph)
 static void		get_linkdata(t_pdata *dat, t_lgraph *graph)
 {
 	char	*separator;
-	char	*tmp1;
-	char	*tmp2;
+	int		len1;
+	int		len2;
 
 	if ((separator = ft_strchr(dat->buff, '-')) != NULL)
 	{
-		tmp1 = ft_strndup(dat->buff, separator - dat->buff);
-		tmp2 = ft_strdup(separator + 1);
-		if (get_index(dat, graph, tmp1, tmp2) == TRUE)
+		len1 = separator - dat->buff;
+		len2 = ft_strlen(separator + 1);
+		if (get_index(dat, graph, len1, len2) == TRUE)
 			graph->links[dat->tmp_x][dat->tmp_y] = 1;
 		else
 			BSET(dat->flags, DATA_ERROR);
-		ft_strdel(&tmp1);
-		ft_strdel(&tmp2);
 	}
 	else
 		BSET(dat->flags, DATA_ERROR);

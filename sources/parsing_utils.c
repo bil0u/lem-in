@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/08 03:33:19 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/08 21:31:55 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/09 14:42:48 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	apply_commands(t_pdata *dat, t_lgraph *graph)
 	}
 }
 
-int		get_index(t_pdata *dat, t_lgraph *graph, char *room1, char *room2)
+int		get_index(t_pdata *dat, t_lgraph *graph, int len1, int len2)
 {
 	t_list	*curr_node;
 	t_room	*tmp;
@@ -70,9 +70,9 @@ int		get_index(t_pdata *dat, t_lgraph *graph, char *room1, char *room2)
 	while (curr_node != NULL && (dat->tmp_x == -1 || dat->tmp_y == -1))
 	{
 		tmp = (t_room *)curr_node->content;
-		if (ft_strcmp(tmp->name, room1) == 0)
+		if (ft_strncmp(tmp->name, dat->buff, len1) == 0)
 			dat->tmp_x = i;
-		else if (ft_strcmp(tmp->name, room2) == 0)
+		else if (ft_strncmp(tmp->name, dat->buff + len1 + 1, len2) == 0)
 			dat->tmp_y = i;
 		curr_node = curr_node->next;
 		i++;

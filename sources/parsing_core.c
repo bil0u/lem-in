@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/07 22:50:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/09 14:50:54 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/10 23:47:09 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,16 +78,22 @@ static void		get_roomdata(t_pdata *dat, t_lgraph *graph)
 	}
 }
 
-static void		get_linkdata(t_pdata *dat, t_lgraph *graph)
+static void		get_linkdata(t_pdata *dat, t_lgraph *graph, char *sep)
 {
-	char	*separator;
-	int		len;
+	int		*i;
+	int		*j;
+	int		len_x;
+	int		len_y;
 
-	if ((separator = ft_strchr(dat->buff, '-')) != NULL)
+	i = &(dat->tmp_x);
+	j = &(dat->tmp_y);
+	if ((sep = ft_strchr(dat->buff, '-')) && ft_strchr(sep + 1, '-') == NULL)
 	{
-		len = separator - dat->buff;
-		if (get_index(dat, graph, len, separator) == TRUE)
-			graph->links[dat->tmp_x][dat->tmp_y] = 1;
+		len_x = sep - dat->buff;
+		dat->to_save = ft_nextws(sep, TRUE);
+		len_y = dat->to_save ? dat->to_save - (sep + 1) : ft_strlen(sep + 1);
+		if (get_distance(dat, graph, len_x, len_y) == TRUE)
+			graph->links[*i][*j] = (*i == *j) ? 0 : dat->tmp_dist;
 		else
 			BSET(dat->flags, DATA_ERROR);
 	}
@@ -113,7 +119,7 @@ void			get_input(t_pdata *dat, t_lenv *env)
 		apply_commands(dat, &(env->graph));
 	}
 	else if (ft_strchr(dat->buff, '-'))
-		get_linkdata(dat, &(env->graph));
+		get_linkdata(dat, &(env->graph), NULL);
 	else
 		BSET(dat->flags, DATA_ERROR);
 	ft_strdel(&(dat->buff));

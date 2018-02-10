@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 11:58:26 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/09 14:51:04 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/10 23:34:14 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,6 @@ int		cmp_name(t_room *room, t_pdata *data_ref);
 int		cmp_coord(t_room *room, t_pdata *data_ref);
 void	apply_commands(t_pdata *dat, t_lgraph *graph);
 void	get_input(t_pdata *dat, t_lenv *env);
-int		get_index(t_pdata *dat, t_lgraph *graph, int len, char *separator);
+int		get_distance(t_pdata *dat, t_lgraph *graph, int len_a, int len_b);
 
 #endif

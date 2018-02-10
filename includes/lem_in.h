@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:36:05 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/08 06:20:46 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/10 23:14:56 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct	s_pdata
 {
 	int			tmp_x;
 	int			tmp_y;
+	int			tmp_dist;
 	char		flags;
 	char		*buff;
 	char		*to_save;

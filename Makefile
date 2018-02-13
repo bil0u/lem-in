@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/02/08 06:21:21 by upopee           ###   ########.fr        #
+#    Updated: 2018/02/12 23:44:13 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,8 @@ FILES =		main_lem_in \
 			struct_utils \
 			parsing_core \
 			parsing_utils \
+			solve_core \
+			solve_utils \
 
 SOURCES = $(patsubst %,$(SRC_DIR)/%,$(FILES:=.c))
 SRC_DIR = sources

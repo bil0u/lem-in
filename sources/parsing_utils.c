@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/08 03:33:19 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/10 23:45:21 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/12 20:58:53 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,44 +44,39 @@ int		cmp_coord(t_room *room, t_pdata *data_ref)
 	return (1);
 }
 
-void	apply_commands(t_pdata *dat, t_lgraph *graph)
+void	apply_commands(t_pdata *dat)
 {
 	if (BIS_SET(dat->flags, START))
 	{
-		graph->start = dat->existing;
+		dat->start = dat->existing;
 		BUNSET(dat->flags, START);
 	}
 	if (BIS_SET(dat->flags, END))
 	{
-		graph->end = dat->existing;
+		dat->end = dat->existing;
 		BUNSET(dat->flags, END);
 	}
 }
 
-int		get_distance(t_pdata *dat, t_lgraph *graph, int len_x, int len_y)
+int		get_distance(t_pdata *dat, t_lgraph *graph, int x, int y)
 {
-	t_list	*curr_node;
-	t_room	*room;
 	int		i;
 
 	i = 0;
 	dat->tmp_x = -1;
 	dat->tmp_y = -1;
-	curr_node = graph->nodes;
-	while (curr_node != NULL && (dat->tmp_x == -1 || dat->tmp_y == -1))
+	while (i < graph->nb_nodes && (dat->tmp_x == -1 || dat->tmp_y == -1))
 	{
-		room = (t_room *)curr_node->content;
-		if (ft_strncmp(room->name, dat->buff, len_x) == 0)
+		if (ft_strncmp(graph->nodes[i]->name, dat->buff, x) == 0)
 			dat->tmp_x = i;
-		if (ft_strncmp(room->name, dat->buff + len_x + 1, len_y) == 0)
+		if (ft_strncmp(graph->nodes[i]->name, dat->buff + x + 1, y) == 0)
 			dat->tmp_y = i;
-		curr_node = curr_node->next;
 		i++;
 	}
 	if (dat->tmp_x != -1 && dat->tmp_y != -1)
 	{
-		len_x = ft_atoi(dat->buff + len_x + 1);
-		dat->tmp_dist = len_x > 0 ? len_x : 1;
+		dat->tmp_dist = (x = ft_atoi(dat->buff + x + y + 1)) > 0 ? x : 1;
+		dat->tmp_dist > 1 ? BSET(dat->flags, CUSTOM_DIST) : (void)x;
 		return (TRUE);
 	}
 	return (FALSE);

@@ -6,39 +6,47 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:37:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/08 21:31:48 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/13 01:59:24 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include <stdlib.h>
 #include "lem_in.h"
 #include "parsing.h"
 #include "struct_utils.h"
+#include "solve.h"
 
 /*
 ** --------------------------------- DEBUG -------------------------------------
 */
 
-void	print_graph(t_lgraph *graph)
+void			print_nodes(t_lgraph *graph, t_pdata *dat)
 {
-	t_list	*tmp;
-	t_room	*curr;
+	t_room	**curr;
 	int		i;
-	int		j;
 
-	ft_printf("---- {red}GRAPH{eoc} ----\n");
-	ft_printf("{yellow}%d{eoc} nodes | start = {green}%p{eoc} | end = {blue}%p{eoc}\n", graph->nb_nodes, graph->start, graph->end);
-	tmp = graph->nodes;
-	ft_printf("+->  ");
+	ft_printf("\n");
+	ft_printf("{yellow}%d{eoc} nodes | start = {green}%s{eoc} | end = {blue}%s{eoc}\n", graph->nb_nodes, graph->nodes[0]->name, graph->nodes[graph->nb_nodes -1]->name);
+	ft_printf("custom distances : {yellow}%s{eoc}\n\n-->   ", BIS_SET(dat->flags, CUSTOM_DIST) ? "YES" : "NO");
 	i = 0;
-	while (tmp != NULL)
+	curr = graph->nodes;
+	while (i < graph->nb_nodes)
 	{
-		curr = (t_room *)tmp->content;
-		ft_printf("{[%d]'{magenta}%s{eoc}' ({cyan}%d{eoc},{cyan}%d{eoc})}  -->  ", i, curr->name, curr->coord_x, curr->coord_y);
-		tmp = tmp->next;
+		ft_printf("[%d - '{magenta}%s{eoc}']   ", i, curr[i]->name);
 		i++;
 	}
-	ft_printf("{red}NULL{eoc}\n");
+	ft_putchar('\n');
+	ft_putchar('\n');
+}
+
+void			print_links(t_lgraph *graph)
+{
+	int		i;
+	int		j;
+	int		cell;
+
+	ft_printf("-- {yellow}%d{eoc} {red}LINKS{eoc} --\n", graph->nb_links);
 	if (graph->links != NULL)
 	{
 		i = 0;
@@ -47,56 +55,111 @@ void	print_graph(t_lgraph *graph)
 			j = 0;
 			while (j < graph->nb_nodes)
 			{
-				ft_printf("%d ", graph->links[i][j]);
+				cell = graph->links[i][j];
+				if (cell == 0)
+					ft_printf("0 ");
+				else if (cell == -1)
+					ft_printf("{red}1{eoc} ", graph->links[i][j]);
+				else
+					ft_printf("{green}%d{eoc} ", graph->links[i][j]);
 				j++;
 			}
 			ft_putchar('\n');
 			i++;
 		}
 	}
-	ft_printf("---------------\n");
+	ft_putchar('\n');
+}
+
+void			print_path(t_lgraph *graph, int path_no)
+{
+	int		curr_node;
+	int		i;
+
+	if (path_no >= 0 && path_no < graph->nb_paths)
+	{
+		ft_printf("{green}Path #%d:{eoc}\n", path_no + 1);
+		ft_printf("{yellow}%s{eoc}", graph->nodes[0]->name);
+		i = 0;
+		while ((curr_node = graph->paths[path_no][i]) != NONE)
+		{
+			ft_printf(" --> {yellow}%s{eoc}", graph->nodes[curr_node]->name);
+			i++;
+		}
+		ft_putchar('\n');
+	}
+}
+
+void			print_paths(t_lgraph *graph)
+{
+	int		i;
+
+	i = 0;
+	ft_printf("> {yellow}%d{eoc} paths:\n", graph->nb_paths);
+	while (i < graph->nb_paths)
+	{
+		print_path(graph, i);
+		i++;
+	}
+	ft_putchar('\n');
 }
 
 /*
 ** -----------------------------------------------------------------------------
 */
 
-static void		init_main_data(t_lenv *env, t_pdata *dat)
-{
-	ft_memset(env, 0, sizeof(*env));
-	ft_memset(dat, 0, sizeof(*dat));
-}
-
-static void		get_ants(t_pdata *dat, t_lenv *env)
+static void		get_ants(t_pdata *dat, t_lgraph *graph)
 {
 	get_next_line(STDIN_FILENO, &(dat->buff));
 	if (dat->buff)
 	{
 		ft_putendl(dat->buff);
 		if (ft_strisnumber(dat->buff, '\0'))
-			env->ants = ft_atoi(dat->buff);
+			graph->nb_ants = ft_atoi(dat->buff);
 		ft_strdel(&(dat->buff));
 	}
-	if (env->ants < 1)
-		BSET(dat->flags, DATA_ERROR);
+	if (graph->nb_ants < 1)
+		BSET(dat->flags, INPUT_ERROR);
+}
+
+static void		init_main_data(t_pdata *dat, t_lgraph *graph)
+{
+	ft_memset(graph, 0, sizeof(*graph));
+	ft_memset(dat, 0, sizeof(*dat));
+	get_ants(dat, graph);
+}
+
+static void		exit_error(t_lgraph *graph)
+{
+	ft_putendl("ERROR");
+	del_graph(graph);
+	exit(ERROR);
 }
 
 int				main(void)
 {
-	t_lenv	env;
-	t_pdata	dat;
+	t_lgraph	graph;
+	t_pdata		dat;
 
-	init_main_data(&env, &dat);
-	get_ants(&dat, &env);
-	while (!BIS_SET(dat.flags, DATA_ERROR))
-	{
-		get_next_line(STDIN_FILENO, &(dat.buff));
-		if (dat.buff)
-			get_input(&dat, &env);
-		else
-			BSET(dat.flags, DATA_ERROR);
-	}
-	print_graph(&(env.graph));
-	env_cleaner(&env);
+	init_main_data(&dat, &graph);
+	while (!BIS_SET(dat.flags, INPUT_ERROR))
+		parse_input(&dat, &graph);
+	pre_check(&dat, &graph);
+	if (BIS_SET(dat.flags, DATA_ERROR))
+		exit_error(&graph);
+
+	print_nodes(&graph, &dat);
+	print_links(&graph);
+
+	load_input(&graph);
+	find_shortest_path(&graph);
+	if (!BIS_SET(graph.flags, END_FOUND))
+		exit_error(&graph);
+	find_other_paths(&graph);
+
+	print_paths(&graph);
+	print_links(&graph);
+
+	del_graph(&graph);
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/07 22:50:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/10 23:47:09 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/12 20:58:35 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,14 @@ static void		get_roomdata(t_pdata *dat, t_lgraph *graph)
 {
 	t_room	new;
 
-	if ((dat->duplicate = ft_lstfind(graph->nodes, dat, &cmp_name)))
+	if ((dat->duplicate = ft_lstfind(dat->nodes_tmp, dat, &cmp_name)))
 	{
 		dat->existing = (t_room *)dat->duplicate->content;
 		dat->existing->coord_x = dat->tmp_x;
 		dat->existing->coord_y = dat->tmp_y;
 		ft_strdel(&(dat->to_save));
 	}
-	else if ((dat->duplicate = ft_lstfind(graph->nodes, dat, &cmp_coord)))
+	else if ((dat->duplicate = ft_lstfind(dat->nodes_tmp, dat, &cmp_coord)))
 	{
 		dat->existing = (t_room *)dat->duplicate->content;
 		ft_strdel(&(dat->existing->name));
@@ -71,10 +71,9 @@ static void		get_roomdata(t_pdata *dat, t_lgraph *graph)
 		new.name = dat->to_save;
 		new.coord_x = dat->tmp_x;
 		new.coord_y = dat->tmp_y;
-		new.busy = FALSE;
-		ft_lstadd(&(graph->nodes), ft_lstnew(&new, sizeof(new)));
+		ft_lstadd(&(dat->nodes_tmp), ft_lstnew(&new, sizeof(new)));
 		graph->nb_nodes++;
-		dat->existing = (t_room *)graph->nodes->content;
+		dat->existing = (t_room *)dat->nodes_tmp->content;
 	}
 }
 
@@ -93,34 +92,42 @@ static void		get_linkdata(t_pdata *dat, t_lgraph *graph, char *sep)
 		dat->to_save = ft_nextws(sep, TRUE);
 		len_y = dat->to_save ? dat->to_save - (sep + 1) : ft_strlen(sep + 1);
 		if (get_distance(dat, graph, len_x, len_y) == TRUE)
+		{
+			graph->nb_links += (*i == *j) ? 0 : 1;
 			graph->links[*i][*j] = (*i == *j) ? 0 : dat->tmp_dist;
+		}
 		else
-			BSET(dat->flags, DATA_ERROR);
+			BSET(dat->flags, INPUT_ERROR);
 	}
 	else
-		BSET(dat->flags, DATA_ERROR);
+		BSET(dat->flags, INPUT_ERROR);
 }
 
-void			get_input(t_pdata *dat, t_lenv *env)
+void			parse_input(t_pdata *d, t_lgraph *graph)
 {
-	ft_putendl(dat->buff);
-	dat->to_save = NULL;
-	if (dat->buff[0] != '#' && !BIS_SET(dat->flags, ROOM_DONE) && !is_room(dat))
+	if (get_next_line(STDIN_FILENO, &(d->buff)) > 0)
 	{
-		BSET(dat->flags, ROOM_DONE);
-		env->graph.links = init_matrix(env->graph.nb_nodes);
-		ft_strdel(&(dat->to_save));
+		ft_putendl(d->buff);
+		d->to_save = NULL;
+		if (d->buff[0] != '#' && !BIS_SET(d->flags, ROOM_DONE) && !is_room(d))
+		{
+			BSET(d->flags, ROOM_DONE);
+			ft_strdel(&(d->to_save));
+			init_graph(d, graph);
+		}
+		if (d->buff[0] == '#')
+			get_hashdata(d);
+		else if (!BIS_SET(d->flags, ROOM_DONE))
+		{
+			get_roomdata(d, graph);
+			apply_commands(d);
+		}
+		else if (ft_strchr(d->buff, '-'))
+			get_linkdata(d, graph, NULL);
+		else
+			BSET(d->flags, INPUT_ERROR);
+		ft_strdel(&(d->buff));
 	}
-	if (dat->buff[0] == '#')
-		get_hashdata(dat);
-	else if (!BIS_SET(dat->flags, ROOM_DONE))
-	{
-		get_roomdata(dat, &(env->graph));
-		apply_commands(dat, &(env->graph));
-	}
-	else if (ft_strchr(dat->buff, '-'))
-		get_linkdata(dat, &(env->graph), NULL);
 	else
-		BSET(dat->flags, DATA_ERROR);
-	ft_strdel(&(dat->buff));
+		BSET(d->flags, INPUT_ERROR);
 }

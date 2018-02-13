@@ -1,0 +1,12 @@
+42
+##start
+A 1 1
+##end
+E 5 5
+B 2 2
+C 3 3
+D 4 4
+A-B
+B-C
+C-D
+D-E

@@ -1,0 +1,23 @@
+42
+##start
+A 1 1
+##end
+E 5 5
+B 2 2
+C 3 3
+D 4 4
+F 6 6
+G 7 7
+H 8 8
+I 9 9
+J 10 10
+A-B
+B-C
+C-D
+D-E
+A-F
+F-G
+G-E
+A-H
+H-I
+I-J

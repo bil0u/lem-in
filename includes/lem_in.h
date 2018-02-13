@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:36:05 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/10 23:14:56 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/13 01:49:57 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,34 +17,40 @@
 
 # define ERROR -1
 # define SUCCESS 0
-
-# define START (1)
-# define END (1 << 1)
-# define DATA_ERROR (1 << 2)
-# define ROOM_DONE (1 << 3)
+# define NONE -1
 
 typedef struct	s_room
 {
 	char		*name;
 	int			coord_x;
 	int			coord_y;
-	char		busy;
 }				t_room;
+
+# define END_FOUND (1)
 
 typedef struct	s_lgraph
 {
-	t_list		*nodes;
-	int			nb_nodes;
+	t_room		**nodes;
 	int			**links;
-	t_room		*start;
-	t_room		*end;
+	int			**paths;
+	int			*explored;
+	int			*distance;
+	int			*previous;
+	int			nb_nodes;
+	int			nb_links;
+	int			nb_ants;
+	int			nb_loops;
+	int			nb_paths;
+	int			curr_node;
+	char		flags;
 }				t_lgraph;
 
-typedef struct	s_lenv
-{
-	t_lgraph	graph;
-	int			ants;
-}				t_lenv;
+# define START (1)
+# define END (1 << 1)
+# define INPUT_ERROR (1 << 2)
+# define ROOM_DONE (1 << 3)
+# define CUSTOM_DIST (1 << 4)
+# define DATA_ERROR (1 << 5)
 
 typedef struct	s_pdata
 {
@@ -54,6 +60,9 @@ typedef struct	s_pdata
 	char		flags;
 	char		*buff;
 	char		*to_save;
+	t_list		*nodes_tmp;
+	t_room		*start;
+	t_room		*end;
 	t_room		*existing;
 	t_list		*duplicate;
 }				t_pdata;

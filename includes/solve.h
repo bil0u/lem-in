@@ -1,19 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   struct_utils.h                                     :+:      :+:    :+:   */
+/*   solve.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/05 11:58:26 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/12 18:34:21 by upopee           ###   ########.fr       */
+/*   Created: 2018/02/12 19:42:29 by upopee            #+#    #+#             */
+/*   Updated: 2018/02/13 00:31:23 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRUCT_UTILS_H
-# define STRUCT_UTILS_H
+#ifndef SOLVE_H
+# define SOLVE_H
 
-void	init_graph(t_pdata *dat, t_lgraph *graph);
-void	del_graph(t_lgraph *graph);
+void	pre_check(t_pdata *dat, t_lgraph *graph);
+void	load_input(t_lgraph *graph);
+void	save_path(t_lgraph *graph);
+void	find_other_paths(t_lgraph *graph);
+void	find_shortest_path(t_lgraph *graph);
 
 #endif

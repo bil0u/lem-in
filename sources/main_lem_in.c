@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:37:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/13 01:59:24 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/14 04:41:31 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "lem_in.h"
 #include "parsing.h"
 #include "struct_utils.h"
-#include "solve.h"
+#include "pathfinding.h"
 
 /*
 ** --------------------------------- DEBUG -------------------------------------
@@ -151,14 +151,14 @@ int				main(void)
 	print_nodes(&graph, &dat);
 	print_links(&graph);
 
-	load_input(&graph);
-	find_shortest_path(&graph);
-	if (!BIS_SET(graph.flags, END_FOUND))
+	get_paths(&graph);
+	if (graph.nb_paths == 0)
 		exit_error(&graph);
-	find_other_paths(&graph);
 
 	print_paths(&graph);
 	print_links(&graph);
+
+	cross_paths(&graph);
 
 	del_graph(&graph);
 	return (SUCCESS);

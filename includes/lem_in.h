@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:36:05 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/13 01:49:57 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/14 04:47:50 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct	s_room
 	int			coord_y;
 }				t_room;
 
+# define NB_PATHS_MAX 100
 # define END_FOUND (1)
 
 typedef struct	s_lgraph
@@ -33,6 +34,8 @@ typedef struct	s_lgraph
 	t_room		**nodes;
 	int			**links;
 	int			**paths;
+	int			**state;
+	int			*paths_len;
 	int			*explored;
 	int			*distance;
 	int			*previous;

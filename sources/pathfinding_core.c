@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   solve_core.c                                       :+:      :+:    :+:   */
+/*   pathfinding_core.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 19:27:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/13 01:57:06 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/14 04:39:29 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
-#include "solve.h"
+#include "pathfinding.h"
 
-static void	mark_visited(t_lgraph *graph)
+static void		mark_visited(t_lgraph *graph)
 {
 	int		i;
 	int		nearest;
@@ -39,23 +39,7 @@ static void	mark_visited(t_lgraph *graph)
 	}
 }
 
-void		find_other_paths(t_lgraph *graph)
-{
-	int		tmp;
-
-	tmp = graph->nb_links;
-	save_path(graph);
-	while (BIS_SET(graph->flags, END_FOUND))
-	{
-		load_input(graph);
-		find_shortest_path(graph);
-		if (BIS_SET(graph->flags, END_FOUND))
-			save_path(graph);
-	}
-	graph->nb_links = tmp;
-}
-
-void		find_shortest_path(t_lgraph *g)
+static void		find_shortest_path(t_lgraph *g)
 {
 	int		i;
 	int		f;
@@ -79,4 +63,32 @@ void		find_shortest_path(t_lgraph *g)
 			c++;
 		}
 	}
+}
+
+void			get_paths(t_lgraph *graph)
+{
+	int		tmp;
+	int		still_optimal;
+	int		cumul;
+	int		curr;
+
+	tmp = graph->nb_links;
+	cumul = 0;
+	still_optimal = TRUE;
+	while (still_optimal)
+	{
+		load_input(graph);
+		find_shortest_path(graph);
+		if (!BIS_SET(graph->flags, END_FOUND))
+			break;
+		curr = last_path_len(graph);
+		still_optimal = graph->nb_ants - cumul > cumul - curr ? TRUE : FALSE;
+		still_optimal = graph->nb_paths < NB_PATHS_MAX ? still_optimal : FALSE;
+		if (still_optimal)
+		{
+			save_path(graph, curr);
+			cumul += curr;
+		}
+	}
+	graph->nb_links = tmp;
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   solve_utils.c                                      :+:      :+:    :+:   */
+/*   pathfinding_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 23:37:08 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/13 01:57:55 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/14 04:39:30 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,37 +35,38 @@ void		pre_check(t_pdata *dat, t_lgraph *graph)
 		BSET(dat->flags, DATA_ERROR);
 }
 
-int			shortest_path_len(int *prev, int nb_nodes)
+int			last_path_len(t_lgraph *graph)
 {
-	int		len;
+	int		path_len;
 	int		i;
+	int		*path;
 
-	len = 1;
-	i = nb_nodes - 1;
-	while (prev[i] != 0)
+	path = graph->previous;
+	path_len = 1;
+	i = graph->nb_nodes - 1;
+	while (path[i] != 0)
 	{
-		i = prev[i];
-		len++;
+		i = path[i];
+		path_len++;
 	}
-	return (len);
+	return (path_len);
 }
 
-void		save_path(t_lgraph *graph)
+void		save_path(t_lgraph *graph, int path_len)
 {
-	int		curr;
-	int		prev;
-	int		i;
+	int		curr_node;
+	int		prev_node;
 
-	curr = graph->nb_nodes - 1;
-	i = shortest_path_len(graph->previous, graph->nb_nodes) - 1;
-	while (curr != 0)
+	curr_node = graph->nb_nodes - 1;
+	graph->paths_len[graph->nb_paths] = path_len;
+	while (curr_node != 0)
 	{
-		prev = graph->previous[curr];
-		graph->paths[graph->nb_paths][i] = curr;
-		graph->links[prev][curr] = -1;
+		prev_node = graph->previous[curr_node];
+		graph->paths[graph->nb_paths][path_len - 1] = curr_node;
+		graph->links[prev_node][curr_node] = -1;
 		graph->nb_links--;
-		i--;
-		curr = prev;
+		path_len--;
+		curr_node = prev_node;
 	}
 	graph->nb_paths++;
 }

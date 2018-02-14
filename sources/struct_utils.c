@@ -6,24 +6,24 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:42:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/13 01:03:27 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/14 04:48:22 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "lem_in.h"
 
-static int		**init_matrix(int nb_nodes)
+int				**init_matrix(int nb_x, int nb_y)
 {
 	int		**new;
 	int		i;
 
-	if ((new = ft_memalloc(nb_nodes * sizeof(*new))) == NULL)
+	if ((new = ft_memalloc(nb_x * sizeof(*new))) == NULL)
 		exit(ERROR);
-	i = nb_nodes;
+	i = nb_x;
 	while (i--)
 	{
-		if ((new[i] = ft_memalloc(nb_nodes * sizeof(**new))) == NULL)
+		if ((new[i] = ft_memalloc(nb_y * sizeof(**new))) == NULL)
 			exit(ERROR);
 	}
 	return (new);
@@ -31,15 +31,19 @@ static int		**init_matrix(int nb_nodes)
 
 static void		init_buffers(t_lgraph *g)
 {
+	int		max_p;
 	int		n;
 	int		i;
 
+	max_p = NB_PATHS_MAX;
 	n = g->nb_nodes;
-	g->links = init_matrix(n);
-	g->paths = init_matrix(n);
-	i = n;
+	g->paths = init_matrix(max_p, n);
+	i = max_p;
 	while (i--)
 		ft_memset(g->paths[i], NONE, sizeof(**(g->paths)) * n);
+	if ((g->paths_len = ft_memalloc(max_p * sizeof(*(g->paths_len)))) == NULL)
+		exit(ERROR);
+	g->links = init_matrix(n, n);
 	if ((g->nodes = ft_memalloc(n * sizeof(*(g->nodes)))) == NULL)
 		exit(ERROR);
 	if ((g->explored = ft_memalloc(n * sizeof(*(g->explored)))) == NULL)
@@ -80,18 +84,26 @@ void			init_graph(t_pdata *dat, t_lgraph *graph)
 void			del_graph(t_lgraph *graph)
 {
 	int		i;
+	int		j;
 
-	i = graph->nb_nodes;
-	while (i--)
+	i = NB_PATHS_MAX;
+	j = graph->nb_nodes;
+	while (i > 0)
 	{
-		ft_strdel(&(graph->nodes[i]->name));
-		ft_memdel((void **)&(graph->nodes[i]));
-		ft_memdel((void **)&(graph->links[i]));
+		i--;
 		ft_memdel((void **)&(graph->paths[i]));
+		if (j > 0)
+		{
+			j--;
+			ft_strdel(&(graph->nodes[j]->name));
+			ft_memdel((void **)&(graph->nodes[j]));
+			ft_memdel((void **)&(graph->links[j]));
+		}
 	}
 	ft_memdel((void **)&(graph->nodes));
 	ft_memdel((void **)&(graph->links));
 	ft_memdel((void **)&(graph->paths));
+	ft_memdel((void **)&(graph->paths_len));
 	ft_memdel((void **)&(graph->explored));
 	ft_memdel((void **)&(graph->distance));
 	ft_memdel((void **)&(graph->previous));

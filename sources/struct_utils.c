@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:42:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/14 04:48:22 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/14 17:35:56 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ static void		init_buffers(t_lgraph *g)
 		exit(ERROR);
 	g->links = init_matrix(n, n);
 	if ((g->nodes = ft_memalloc(n * sizeof(*(g->nodes)))) == NULL)
+		exit(ERROR);
+	if ((g->ant_no = ft_memalloc(n * sizeof(*(g->ant_no)))) == NULL)
 		exit(ERROR);
 	if ((g->explored = ft_memalloc(n * sizeof(*(g->explored)))) == NULL)
 		exit(ERROR);
@@ -102,6 +104,7 @@ void			del_graph(t_lgraph *graph)
 	}
 	ft_memdel((void **)&(graph->nodes));
 	ft_memdel((void **)&(graph->links));
+	ft_memdel((void **)&(graph->ant_no));
 	ft_memdel((void **)&(graph->paths));
 	ft_memdel((void **)&(graph->paths_len));
 	ft_memdel((void **)&(graph->explored));

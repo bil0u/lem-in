@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:36:05 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/14 04:47:50 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/14 18:16:51 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,12 @@ typedef struct	s_lgraph
 	int			**paths;
 	int			**state;
 	int			*paths_len;
+	int			*ant_no;
 	int			*explored;
 	int			*distance;
 	int			*previous;
+	int			ants_start;
+	int			ants_end;
 	int			nb_nodes;
 	int			nb_links;
 	int			nb_ants;

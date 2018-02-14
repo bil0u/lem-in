@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/02/14 17:24:48 by upopee           ###   ########.fr        #
+#    Updated: 2018/02/14 18:41:55 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 
 NAME = lem-in
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra $(INCLUDES) -g
+CFLAGS = -Wall -Werror -Wextra $(INCLUDES)
 LFLAGS =  -lft -L $(LIB_DIR)
 AR = ar -rc
 LINK = ar -s

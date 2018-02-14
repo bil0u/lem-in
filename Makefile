@@ -6,34 +6,45 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/02/14 04:39:55 by upopee           ###   ########.fr        #
+#    Updated: 2018/02/14 17:24:48 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # -- VARIABLES --
 
-# Name
 NAME = lem-in
-
-# Compiler
 CC = gcc
-
-# Flags
-CFLAGS = -Wall -Wextra -Wall $(INCLUDES) -g
+CFLAGS = -Wall -Werror -Wextra $(INCLUDES) -g
 LFLAGS =  -lft -L $(LIB_DIR)
+AR = ar -rc
+LINK = ar -s
+LIBMAKE = make -C
+NEW_DIR = mkdir -p
+DEL_DIR = rm -rf
+DEL_FILE = rm -f
 
-# Library paths
-LIB_DIR = ./libft
-LIB_INCLUDES_DIR = $(LIB_DIR)
+# -- COLORS --
 
-# Sources paths
+YELLOW_BOLD = \e[31;33;1m
+GREEN = \e[32m
+GREEN_BOLD = \e[32;1m
+RED = \e[31m
+RED_BOLD = \e[31;1m
+WHITE_BOLD = \e[37;1m
+EOC = \e[0m
+
+# -- PATHS --
+
+SRC_DIR = sources
+INC_DIR = includes
+OBJ_DIR = .objects
+LIB_DIR = libft
+
 VPATH = sources
-INCLUDES_DIR = includes
+INCLUDES = -I $(INC_DIR) -I $(LIB_DIR)
 
-# Includes paths
-INCLUDES = -I $(INCLUDES_DIR) -I $(LIB_INCLUDES_DIR)
+# -- FILES --
 
-# Sources files
 FILES =		main_lem_in \
 			struct_utils \
 			parsing_core \
@@ -43,57 +54,49 @@ FILES =		main_lem_in \
 			solve \
 
 SOURCES = $(patsubst %,$(SRC_DIR)/%,$(FILES:=.c))
-SRC_DIR = sources
-
-# Objects files
 OBJECTS = $(patsubst %,$(OBJ_DIR)/%,$(FILES:=.o))
-OBJ_DIR = .objects
+
+# -- IMPLICIT RULES --
+
+$(OBJ_DIR)/%.o: %.c
+	$(CC) -o $@ -c $< $(CFLAGS)
+	printf "$(GREEN).$(EOC)"
+
 
 # -- RULES --
 
 all: prep $(NAME)
 
 $(NAME): lib
-	printf "> \e[31;33;1m$(NAME)\e[0m : \e[32mCreating objects \e[0m "
+	printf "> $(YELLOW_BOLD)$(NAME)$(EOC) : $(GREEN)Creating objects$(EOC) "
 	make obj
 	printf "\n"
-	printf "> \e[31;33;1m$(NAME)\e[0m : \e[32mCreating binary\e[0m "
+	printf "> $(YELLOW_BOLD)$(NAME)$(EOC) : $(GREEN)Creating Library$(EOC) "
 	$(CC) $(CFLAGS) $(LFLAGS) $(OBJECTS) -o $(NAME)
-	printf "\t\t\e[37;1m[\e[32;1mDONE\e[0m\e[37;1m]\e[0m\n"
+	printf "\t$(WHITE_BOLD)[$(GREEN_BOLD)DONE$(WHITE_BOLD)]$(EOC)\n"
 
 obj: $(OBJECTS)
 	echo >> /dev/null
 
-$(OBJ_DIR)/%.o: %.c
-	$(CC) -o $@ -c $< $(CFLAGS)
-	printf "\e[32m.\e[0m"
-
 lib:
-	make -C $(LIB_DIR)
+	$(LIBMAKE) $(LIB_DIR)
 
 clean:
-	printf "> \e[31;33;1m$(NAME)\e[0m : \e[31mDeleting objects\e[0m "
-	rm -rf $(OBJ_DIR)
-	printf "\t\t\e[37;1m[\e[31;1mX\e[0m\e[37;1m]\e[0m\n"
-	make -C $(LIB_DIR) $@
+	printf "> $(YELLOW_BOLD)$(NAME)$(EOC) : $(RED)Deleting objects$(EOC) "
+	$(DEL_DIR) $(OBJ_DIR)
+	printf "\t$(WHITE_BOLD)[$(RED_BOLD)X$(WHITE_BOLD)]$(EOC)\n"
+	$(LIBMAKE) $(LIB_DIR) $@
 
 fclean: clean
-	printf "> \e[31;33;1m$(NAME)\e[0m : \e[31mDeleting binary\e[0m "
-	rm -f $(NAME)
-	printf "\t\t\e[37;1m[\e[31;1mX\e[0m\e[37;1m]\e[0m\n"
-	make -C $(LIB_DIR) $@
+	printf "> $(YELLOW_BOLD)$(NAME)$(EOC) : $(RED)Deleting binary$(EOC) "
+	$(DEL_FILE) $(NAME)
+	printf "\t$(WHITE_BOLD)[$(RED_BOLD)X$(WHITE_BOLD)]$(EOC)\n"
+	$(LIBMAKE) $(LIB_DIR) $@
 
 re: fclean all
 
 prep:
-	mkdir -p $(OBJ_DIR)
-
-sandwich: re
-	make clean
-	echo "Sandwich ready !"
-# This rule allow the library build process to complete even if there are
-# files named 'all, clean, fclean, re' in the working directory
-
+	$(NEW_DIR) $(OBJ_DIR)
 
 .PHONY: all obj lib clean fclean re sandwich prep debug
 

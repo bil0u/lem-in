@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:36:05 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/16 16:46:41 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/21 18:43:39 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct	s_lgraph
 # define PRINT_PATHS (1 << 6)
 # define PRINT_IF_ERROR (1 << 7)
 # define PARSING_DONE (1 << 8)
+# define VERBOSE (1 << 9)
 
 typedef struct	s_pdata
 {

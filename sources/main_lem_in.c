@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:37:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/16 16:50:21 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/21 18:55:32 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,11 @@ static void		check_options(int argc, char **argv, t_pdata *dat)
 			BSET(dat->flags, PRINT_PATHS);
 		else if (argv[argc][0] == '-' && argv[argc][1] == 'd')
 			BSET(dat->flags, PRINT_IF_ERROR);
+		else if (argv[argc][0] == '-' && argv[argc][1] == 'v')
+		{
+			BSET(dat->flags, PRINT_PATHS);
+			BSET(dat->flags, VERBOSE);
+		}
 		else
 		{
 			ft_printf("Unknown option: '%s'\n", argv[argc]);
@@ -114,7 +119,7 @@ int				main(int argc, char **argv)
 		print_paths(&graph);
 	if (graph.nb_paths == 0)
 		exit_error(&dat, &graph);
-	cross_paths(&graph);
+	cross_paths(&graph, &dat);
 	del_graph(&graph);
 	return (SUCCESS);
 }

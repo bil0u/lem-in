@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/02/21 16:40:26 by upopee           ###   ########.fr        #
+#    Updated: 2018/02/21 18:39:28 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -79,13 +79,11 @@ $(NAME): $(LIBFT_LIB) $(OBJ_DIR) $(OBJECTS) Makefile
 	@$(CC) $(LDLIBS) $(LDFLAGS) $(OBJECTS) -o $@
 	@printf "\r$(ERASELN)> $(YELLOW)$(NAME)$(EOC) : Binary created !\t$(GREEN_B)✓$(EOC)\n"
 
-$(LIBFT_LIB): lib
+$(LIBFT_LIB):
+	@$(LDMAKE) $(LIBFT_DIR)
 
 $(OBJ_DIR):
 	@$(MKDIR) $(OBJ_DIR)
-
-lib:
-	@$(LDMAKE) $(LIBFT_DIR)
 
 clean: libclean
 	@if [ -e $(OBJ_DIR) ]; \

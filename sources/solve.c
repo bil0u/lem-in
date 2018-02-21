@@ -6,14 +6,15 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 04:39:09 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/15 12:09:31 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/21 19:07:57 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 #include "struct_utils.h"
+#include "print_utils.h"
 
-static int		handle_directmap(t_lgraph *graph, int path_no)
+static int		handle_directmap(t_lgraph *graph, t_pdata *dat, int path_no)
 {
 	int		len;
 	char	*room_name;
@@ -26,20 +27,21 @@ static int		handle_directmap(t_lgraph *graph, int path_no)
 		graph->ants_start--;
 		graph->ants_end++;
 		room_name = graph->nodes[pos[0]]->name;
-		ft_printf("L%d-%s ", graph->nb_ants - graph->ants_start, room_name);
+		if (!BIS_SET(dat->flags, VERBOSE))
+			ft_printf("L%d-%s ", graph->nb_ants - graph->ants_start, room_name);
 		return (SUCCESS);
 	}
 	return (len);
 }
 
-static void		update_path(t_lgraph *g, int p_no, int i)
+static void		update_path(t_lgraph *g, t_pdata *d, int p_no, int i)
 {
 	int		*pos;
 	int		*busy;
 
 	pos = g->paths[p_no];
 	busy = g->state[p_no];
-	if (busy[pos[i - 1]])
+	if (busy[pos[i - 1]] && !BIS_SET(d->flags, VERBOSE))
 		ft_printf("L%d-%s ", g->ant_no[pos[i - 1]], g->nodes[pos[i]]->name);
 	busy[pos[i - 1]] ? g->ants_end++ : (void)i;
 	busy[pos[i - 1]] ? g->ant_no[pos[i - 1]] = 0 : (void)i;
@@ -48,17 +50,17 @@ static void		update_path(t_lgraph *g, int p_no, int i)
 	{
 		ft_swap(&(busy[pos[i]]), &(busy[pos[i - 1]]));
 		ft_swap(&(g->ant_no[pos[i]]), &(g->ant_no[pos[i - 1]]));
-		if (busy[pos[i]])
+		if (busy[pos[i]] && !BIS_SET(d->flags, VERBOSE))
 			ft_printf("L%d-%s ", g->ant_no[pos[i]], g->nodes[pos[i]]->name);
 	}
 	g->ants_start > 0 ? busy[pos[0]] = TRUE : (void)i;
 	busy[pos[0]] ? g->ants_start-- : (void)i;
 	busy[pos[0]] ? (g->ant_no[pos[0]] = g->nb_ants - g->ants_start) : (void)i;
-	if (busy[pos[0]])
+	if (busy[pos[0]] && !BIS_SET(d->flags, VERBOSE))
 		ft_printf("L%d-%s ", g->ant_no[pos[0]], g->nodes[pos[0]]->name);
 }
 
-void			cross_paths(t_lgraph *graph)
+void			cross_paths(t_lgraph *graph, t_pdata *dat)
 {
 	int		curr_path;
 	int		path_len;
@@ -71,8 +73,10 @@ void			cross_paths(t_lgraph *graph)
 		curr_path = 0;
 		while (curr_path < graph->nb_paths)
 		{
-			if ((path_len = handle_directmap(graph, curr_path)) > 0)
-				update_path(graph, curr_path, path_len - 1);
+			if ((path_len = handle_directmap(graph, dat, curr_path)) > 0)
+				update_path(graph, dat, curr_path, path_len - 1);
+			if (BIS_SET(dat->flags, VERBOSE))
+				print_path_state(graph, graph->paths[curr_path], curr_path);
 			curr_path++;
 		}
 		ft_putchar('\n');

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:42:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/14 17:35:56 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/15 18:07:55 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,26 +81,22 @@ void			init_graph(t_pdata *dat, t_lgraph *graph)
 		ft_memdel((void **)&leak);
 	}
 	dat->nodes_tmp = NULL;
+	BSET(graph->flags, ALLOCATED_MEMORY);
 }
 
 void			del_graph(t_lgraph *graph)
 {
 	int		i;
-	int		j;
 
 	i = NB_PATHS_MAX;
-	j = graph->nb_nodes;
-	while (i > 0)
-	{
-		i--;
+	while (i-- > 0)
 		ft_memdel((void **)&(graph->paths[i]));
-		if (j > 0)
-		{
-			j--;
-			ft_strdel(&(graph->nodes[j]->name));
-			ft_memdel((void **)&(graph->nodes[j]));
-			ft_memdel((void **)&(graph->links[j]));
-		}
+	i = graph->nb_nodes;
+	while (i-- > 0)
+	{
+		ft_strdel(&(graph->nodes[i]->name));
+		ft_memdel((void **)&(graph->nodes[i]));
+		ft_memdel((void **)&(graph->links[i]));
 	}
 	ft_memdel((void **)&(graph->nodes));
 	ft_memdel((void **)&(graph->links));

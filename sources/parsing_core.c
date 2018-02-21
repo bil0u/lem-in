@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/07 22:50:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/12 20:58:35 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/16 16:50:46 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ static void		get_linkdata(t_pdata *dat, t_lgraph *graph, char *sep)
 		{
 			graph->nb_links += (*i == *j) ? 0 : 1;
 			graph->links[*i][*j] = (*i == *j) ? 0 : dat->tmp_dist;
+			if (!BIS_SET(dat->flags, ORIENTED_GRAPH))
+				graph->links[*j][*i] = (*i == *j) ? 0 : dat->tmp_dist;
 		}
 		else
 			BSET(dat->flags, INPUT_ERROR);
@@ -103,30 +105,30 @@ static void		get_linkdata(t_pdata *dat, t_lgraph *graph, char *sep)
 		BSET(dat->flags, INPUT_ERROR);
 }
 
-void			parse_input(t_pdata *d, t_lgraph *graph)
+void			parse_input(t_pdata *d, t_lgraph *g)
 {
 	if (get_next_line(STDIN_FILENO, &(d->buff)) > 0)
 	{
-		ft_putendl(d->buff);
+		ft_lstappend(&(d->input_tmp), ft_lstnew_nm(d->buff, 0));
 		d->to_save = NULL;
 		if (d->buff[0] != '#' && !BIS_SET(d->flags, ROOM_DONE) && !is_room(d))
 		{
 			BSET(d->flags, ROOM_DONE);
 			ft_strdel(&(d->to_save));
-			init_graph(d, graph);
+			g->nb_nodes > 1 ? init_graph(d, g) : BSET(d->flags, INPUT_ERROR);
 		}
 		if (d->buff[0] == '#')
 			get_hashdata(d);
 		else if (!BIS_SET(d->flags, ROOM_DONE))
 		{
-			get_roomdata(d, graph);
+			get_roomdata(d, g);
 			apply_commands(d);
 		}
-		else if (ft_strchr(d->buff, '-'))
-			get_linkdata(d, graph, NULL);
+		else if (ft_strchr(d->buff, '-') && g->nb_nodes > 1)
+			get_linkdata(d, g, NULL);
 		else
 			BSET(d->flags, INPUT_ERROR);
-		ft_strdel(&(d->buff));
+		d->buff = NULL;
 	}
 	else
 		BSET(d->flags, INPUT_ERROR);

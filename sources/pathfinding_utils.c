@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 23:37:08 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/14 04:39:30 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/16 16:47:06 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,14 @@ void		load_input(t_lgraph *g)
 	g->flags = 0;
 }
 
-void		pre_check(t_pdata *dat, t_lgraph *graph)
+int			pre_check(t_pdata *dat, t_lgraph *graph)
 {
 	if (graph->nb_ants < 1 || graph->nb_nodes < 2 || graph->nb_links < 1)
-		BSET(dat->flags, DATA_ERROR);
+		return (ERROR);
 	else if (dat->start == NULL || dat->end == NULL || dat->start == dat->end)
-		BSET(dat->flags, DATA_ERROR);
+		return (ERROR);
+	BSET(dat->flags, PARSING_DONE);
+	return (SUCCESS);
 }
 
 int			last_path_len(t_lgraph *graph)

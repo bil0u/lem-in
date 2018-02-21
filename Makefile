@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/02/21 04:49:46 by upopee           ###   ########.fr        #
+#    Updated: 2018/02/21 16:40:26 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ OBJ_DIR =	.objects
 
 C_FILES =	main_lem_in \
 			struct_utils \
+			print_utils \
 			parsing_core \
 			parsing_utils \
 			pathfinding_core \
@@ -53,6 +54,7 @@ H_FILES =	lem_in \
 			parsing \
 			pathfinding \
 			struct_utils \
+			print_utils \
 
 OBJECTS = $(patsubst %,$(OBJ_DIR)/%,$(C_FILES:=.o))
 INCLUDES = $(patsubst %,$(INC_DIR)/%,$(H_FILES:=.h))
@@ -65,7 +67,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES)
 	@$(eval PERCENT=$(shell echo $$(($(INDEX)*100/$(NB)))))
 	@$(eval TO_DO=$(shell echo $$((20-$(INDEX)*20/$(NB) - 1))))
 	@$(eval COLOR=$(shell list=(160 196 202 208 215 221 226 227 190 154 118 82 46); index=$$(($(PERCENT) * $${#list[@]} / 100)); echo "$${list[$$index]}"))
-	@printf "\r> $(YELLOW)$(NAME)$(EOC) : Creating binary...  %2d%% $(CNO)[`printf '*%.0s' {0..$(DONE)}`%*s]$(YELLOW)%*.*s$(EOC)$(ERASELN)" $(PERCENT) $(COLOR) $(TO_DO) "" $(DELTA) $(DELTA) "$(shell echo "$@" | sed 's/^.*\///')"
+	@printf "\r> $(YELLOW)$(NAME)$(EOC) : Creating binary...  %2d%% $(CNO)[`printf '#%.0s' {0..$(DONE)}`%*s]$(YELLOW)%*.*s$(EOC)$(ERASELN)" $(PERCENT) $(COLOR) $(TO_DO) "" $(DELTA) $(DELTA) "$(shell echo "$@" | sed 's/^.*\///')"
 	@$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 	@$(eval INDEX=$(shell echo $$(($(INDEX)+1))))
 

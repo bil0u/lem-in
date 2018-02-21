@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 19:27:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/14 04:39:29 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/16 15:56:19 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void		find_shortest_path(t_lgraph *g)
 		{
 			if (g->links[f][c] != 0
 				&& ((g->distance[f] + g->links[f][c]) < g->distance[c]
-				||	g->distance[c] == NONE))
+				|| g->distance[c] == NONE))
 			{
 				g->distance[c] = g->distance[f] + g->links[f][c];
 				g->previous[c] = f;
@@ -80,7 +80,7 @@ void			get_paths(t_lgraph *graph)
 		load_input(graph);
 		find_shortest_path(graph);
 		if (!BIS_SET(graph->flags, END_FOUND))
-			break;
+			break ;
 		curr = last_path_len(graph);
 		still_optimal = graph->nb_ants - cumul > cumul - curr ? TRUE : FALSE;
 		still_optimal = graph->nb_paths < NB_PATHS_MAX ? still_optimal : FALSE;
@@ -90,5 +90,6 @@ void			get_paths(t_lgraph *graph)
 			cumul += curr;
 		}
 	}
+	graph->nb_paths > 0 ? BSET(graph->flags, PATH_FOUND) : (void)tmp;
 	graph->nb_links = tmp;
 }

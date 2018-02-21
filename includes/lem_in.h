@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:36:05 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/20 17:26:32 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/16 16:46:41 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ typedef struct	s_room
 
 # define NB_PATHS_MAX 100
 # define END_FOUND (1)
+# define ALLOCATED_MEMORY (1 << 1)
+# define PATH_FOUND (1 << 2)
 
 typedef struct	s_lgraph
 {
@@ -48,7 +50,7 @@ typedef struct	s_lgraph
 	int			nb_loops;
 	int			nb_paths;
 	int			curr_node;
-	char		flags;
+	int			flags;
 }				t_lgraph;
 
 # define START (1)
@@ -56,17 +58,21 @@ typedef struct	s_lgraph
 # define INPUT_ERROR (1 << 2)
 # define ROOM_DONE (1 << 3)
 # define CUSTOM_DIST (1 << 4)
-# define DATA_ERROR (1 << 5)
+# define ORIENTED_GRAPH (1 << 5)
+# define PRINT_PATHS (1 << 6)
+# define PRINT_IF_ERROR (1 << 7)
+# define PARSING_DONE (1 << 8)
 
 typedef struct	s_pdata
 {
 	int			tmp_x;
 	int			tmp_y;
 	int			tmp_dist;
-	char		flags;
+	int			flags;
 	char		*buff;
 	char		*to_save;
 	t_list		*nodes_tmp;
+	t_list		*input_tmp;
 	t_room		*start;
 	t_room		*end;
 	t_room		*existing;

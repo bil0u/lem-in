@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/08 03:33:19 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/15 18:26:07 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/22 18:30:19 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,27 +61,28 @@ void	apply_commands(t_pdata *dat)
 int		get_distance(t_pdata *dat, t_lgraph *graph, int x, int y)
 {
 	int		i;
+	int		name_len;
+	char	*node_name;
 
-	if (x > 0 && y > 0)
+	if (x <= 0 || y <= 0)
+		return (FALSE);
+	i = 0;
+	dat->tmp_x = -1;
+	dat->tmp_y = -1;
+	while (i < graph->nb_nodes && (dat->tmp_x == -1 || dat->tmp_y == -1))
 	{
-		i = 0;
-		dat->tmp_x = -1;
-		dat->tmp_y = -1;
-		while (i < graph->nb_nodes && (dat->tmp_x == -1 || dat->tmp_y == -1))
-		{
-			if (ft_strncmp(graph->nodes[i]->name, dat->buff, x) == 0)
-				dat->tmp_x = i;
-			if (ft_strncmp(graph->nodes[i]->name, dat->buff + x + 1, y) == 0)
-				dat->tmp_y = i;
-			i++;
-		}
-		if (dat->tmp_x != -1 && dat->tmp_y != -1)
-		{
-			x = ft_atoi(dat->buff + x + y + 1);
-			dat->tmp_dist = x > 0 ? x : 1;
-			dat->tmp_dist > 1 ? BSET(dat->flags, CUSTOM_DIST) : (void)x;
-			return (TRUE);
-		}
+		node_name = graph->nodes[i]->name;
+		name_len = ft_strlen(node_name);
+		if (name_len == x && ft_strncmp(node_name, dat->buff, x) == 0)
+			dat->tmp_x = i;
+		if (name_len == y && ft_strncmp(node_name, dat->buff + x + 1, y) == 0)
+			dat->tmp_y = i;
+		i++;
 	}
-	return (FALSE);
+	if (dat->tmp_x == -1 || dat->tmp_y == -1)
+		return (FALSE);
+	x = ft_atoi(dat->buff + x + y + 1);
+	dat->tmp_dist = x > 0 ? x : 1;
+	dat->tmp_dist > 1 ? BSET(dat->flags, CUSTOM_DIST) : (void)x;
+	return (TRUE);
 }

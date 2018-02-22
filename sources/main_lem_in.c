@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:37:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/21 18:55:32 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/22 17:29:16 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,10 +115,10 @@ int				main(int argc, char **argv)
 	if (BIS_SET(graph.flags, PATH_FOUND))
 		print_input(dat.input_tmp);
 	ft_lstdel(&(dat.input_tmp), &ft_delcontent);
-	if (BIS_SET(dat.flags, PRINT_PATHS))
-		print_paths(&graph);
 	if (graph.nb_paths == 0)
 		exit_error(&dat, &graph);
+	if (BIS_SET(dat.flags, PRINT_PATHS))
+		print_paths(&graph);
 	cross_paths(&graph, &dat);
 	del_graph(&graph);
 	return (SUCCESS);

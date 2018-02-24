@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 19:42:29 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/21 18:57:01 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/24 18:36:35 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 int		pre_check(t_pdata *dat, t_lgraph *graph);
 void	load_input(t_lgraph *graph);
-void	save_path(t_lgraph *graph, int path_len);
+void	save_path(t_lgraph *g, int path_len, int *optimal);
 int		last_path_len(t_lgraph *graph);
 void	get_paths(t_lgraph *graph);
 void	cross_paths(t_lgraph *graph, t_pdata *dat);

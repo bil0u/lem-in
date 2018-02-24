@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 19:27:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/24 17:32:45 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/24 18:36:40 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void			get_paths(t_lgraph *graph)
 		still_optimal = graph->nb_paths < NB_PATHS_MAX ? still_optimal : FALSE;
 		if (still_optimal)
 		{
-			save_path(graph, curr);
+			save_path(graph, curr, &still_optimal);
 			cumul += curr;
 		}
 	}

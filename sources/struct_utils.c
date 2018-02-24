@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:42:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/24 14:33:13 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/24 18:33:49 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,16 @@ int				**init_matrix(int nb_x, int nb_y)
 
 static void		init_buffers(t_lgraph *g)
 {
-	int		max_p;
 	int		n;
 	int		i;
 
-	max_p = NB_PATHS_MAX;
 	n = g->nb_nodes;
-	g->paths = init_matrix(max_p, n);
-	g->state = init_matrix(max_p, n);
-	i = max_p;
+	g->paths = init_matrix(NB_PATHS_MAX, n);
+	g->state = init_matrix(NB_PATHS_MAX, n);
+	i = NB_PATHS_MAX;
 	while (i--)
 		ft_memset(g->paths[i], NONE, sizeof(**(g->paths)) * n);
-	if ((g->paths_len = ft_memalloc(max_p * sizeof(*(g->paths_len)))) == NULL)
+	if (!(g->paths_len = ft_memalloc(NB_PATHS_MAX * sizeof(*(g->paths_len)))))
 		exit(ERROR);
 	g->links = init_matrix(n, n);
 	if ((g->nodes = ft_memalloc(n * sizeof(*(g->nodes)))) == NULL)
@@ -50,6 +48,8 @@ static void		init_buffers(t_lgraph *g)
 	if ((g->ant_no = ft_memalloc(n * sizeof(*(g->ant_no)))) == NULL)
 		exit(ERROR);
 	if ((g->explored = ft_memalloc(n * sizeof(*(g->explored)))) == NULL)
+		exit(ERROR);
+	if ((g->used = ft_memalloc(n * sizeof(*(g->used)))) == NULL)
 		exit(ERROR);
 	if ((g->distance = ft_memalloc(n * sizeof(*(g->distance)))) == NULL)
 		exit(ERROR);
@@ -109,6 +109,7 @@ void			del_graph(t_lgraph *graph)
 	ft_memdel((void **)&(graph->paths));
 	ft_memdel((void **)&(graph->paths_len));
 	ft_memdel((void **)&(graph->explored));
+	ft_memdel((void **)&(graph->used));
 	ft_memdel((void **)&(graph->distance));
 	ft_memdel((void **)&(graph->previous));
 }

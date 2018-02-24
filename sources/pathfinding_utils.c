@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 23:37:08 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/24 17:21:50 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/24 18:37:35 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int			last_path_len(t_lgraph *graph)
 	return (path_len);
 }
 
-void		save_path(t_lgraph *g, int path_len)
+void		save_path(t_lgraph *g, int path_len, int *optimal)
 {
 	int		curr_node;
 	int		prev_node;
@@ -64,7 +64,16 @@ void		save_path(t_lgraph *g, int path_len)
 	while (curr_node != 0)
 	{
 		prev_node = g->previous[curr_node];
-		g->paths[g->nb_paths][path_len - 1] = curr_node;
+		if (g->used[curr_node] == FALSE || curr_node == g->nb_nodes - 1)
+		{
+			g->paths[g->nb_paths][path_len - 1] = curr_node;
+			g->used[curr_node] = TRUE;
+		}
+		else
+		{
+			*optimal = FALSE;
+			return ;
+		}
 		g->links[prev_node][curr_node] = -g->links[prev_node][curr_node];
 		g->links[curr_node][prev_node] = -g->links[curr_node][prev_node];
 		g->nb_links--;

@@ -3,7 +3,5 @@
 A 0 0
 B 1 1
 C 2 2
+##end
 D 3 3
-A-B
-B-C
-C-D

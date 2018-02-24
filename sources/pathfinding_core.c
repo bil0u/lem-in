@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 19:27:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/16 15:56:19 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/24 17:32:45 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void		find_shortest_path(t_lgraph *g)
 		c = 0;
 		while (c < g->nb_nodes)
 		{
-			if (g->links[f][c] != 0
+			if (g->links[f][c] > 0
 				&& ((g->distance[f] + g->links[f][c]) < g->distance[c]
 				|| g->distance[c] == NONE))
 			{

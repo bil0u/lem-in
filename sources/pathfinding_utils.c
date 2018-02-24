@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 23:37:08 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/21 18:55:41 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/24 17:21:50 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int			pre_check(t_pdata *dat, t_lgraph *graph)
 		return (ERROR);
 	else if (dat->start == NULL || dat->end == NULL || dat->start == dat->end)
 		return (ERROR);
-	BSET(dat->flags, PARSING_DONE);
+	BSET(dat->flags, PARSE_OK);
 	return (SUCCESS);
 }
 
@@ -54,21 +54,22 @@ int			last_path_len(t_lgraph *graph)
 	return (path_len);
 }
 
-void		save_path(t_lgraph *graph, int path_len)
+void		save_path(t_lgraph *g, int path_len)
 {
 	int		curr_node;
 	int		prev_node;
 
-	curr_node = graph->nb_nodes - 1;
-	graph->paths_len[graph->nb_paths] = path_len;
+	curr_node = g->nb_nodes - 1;
+	g->paths_len[g->nb_paths] = path_len;
 	while (curr_node != 0)
 	{
-		prev_node = graph->previous[curr_node];
-		graph->paths[graph->nb_paths][path_len - 1] = curr_node;
-		graph->links[prev_node][curr_node] = -1;
-		graph->nb_links--;
+		prev_node = g->previous[curr_node];
+		g->paths[g->nb_paths][path_len - 1] = curr_node;
+		g->links[prev_node][curr_node] = -g->links[prev_node][curr_node];
+		g->links[curr_node][prev_node] = -g->links[curr_node][prev_node];
+		g->nb_links--;
 		path_len--;
 		curr_node = prev_node;
 	}
-	graph->nb_paths++;
+	g->nb_paths++;
 }

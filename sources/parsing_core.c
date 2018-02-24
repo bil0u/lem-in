@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/07 22:50:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/22 17:51:56 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/24 18:01:51 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ static void		get_roomdata(t_pdata *dat, t_lgraph *graph)
 		graph->nb_nodes++;
 		dat->existing = (t_room *)dat->nodes_tmp->content;
 	}
+	apply_commands(dat);
 }
 
 static void		get_linkdata(t_pdata *dat, t_lgraph *graph, char *sep)
@@ -116,14 +117,13 @@ void			parse_input(t_pdata *d, t_lgraph *g)
 			BSET(d->flags, ROOM_DONE);
 			ft_strdel(&(d->to_save));
 			g->nb_nodes > 1 ? init_graph(d, g) : BSET(d->flags, INPUT_ERROR);
+			if (BIS_SET(d->flags, INPUT_ERROR))
+				return ;
 		}
 		if (d->buff[0] == '#')
 			get_hashdata(d);
 		else if (!BIS_SET(d->flags, ROOM_DONE))
-		{
 			get_roomdata(d, g);
-			apply_commands(d);
-		}
 		else if (ft_strchr(d->buff, '-') && g->nb_nodes > 1)
 			get_linkdata(d, g, ft_strchr(d->buff, '-'));
 		else
@@ -131,5 +131,5 @@ void			parse_input(t_pdata *d, t_lgraph *g)
 		d->buff = NULL;
 	}
 	else
-		BSET(d->flags, INPUT_ERROR);
+		BSET(d->flags, PARSE_OK);
 }

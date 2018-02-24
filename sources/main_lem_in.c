@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:37:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/22 17:29:16 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/24 18:17:23 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,29 +43,30 @@ static void		get_ants(t_pdata *dat, t_lgraph *graph)
 		BSET(dat->flags, INPUT_ERROR);
 }
 
-static void		init_main_data(t_pdata *dat, t_lgraph *graph)
+static void		errors_details(t_pdata *dat, t_lgraph *graph, int step)
 {
-	ft_memset(graph, 0, sizeof(*graph));
-	ft_memset(dat, 0, sizeof(*dat));
+	if (graph->nb_nodes == 0)
+		ft_putendl("ERROR: no room defined");
+	else if (graph->nb_nodes == 1)
+		ft_putendl("ERROR: only one room defined");
+	else if (dat->start == NULL)
+		ft_putendl("ERROR: no start defined");
+	else if (dat->end == NULL)
+		ft_putendl("ERROR: no end defined");
+	else if (dat->end && dat->start == dat->end)
+		ft_putendl("ERROR: start & end cannot be the same");
+	else if (!BIS_SET(dat->flags, PARSE_OK) && BIS_SET(dat->flags, INPUT_ERROR))
+		print_error(dat->input_tmp);
+	else if (BIS_SET(dat->flags, PARSE_OK) && graph->nb_links == 0)
+		ft_putendl("ERROR: no links defined");
+	else if (step == 2)
+		ft_putendl("ERROR: no path found");
 }
 
-static void		exit_error(t_pdata *dat, t_lgraph *graph)
+static int		end_error(t_pdata *dat, t_lgraph *graph, int step)
 {
-	if (BIS_SET(dat->flags, PRINT_IF_ERROR))
-	{
-		if (!BIS_SET(dat->flags, PARSING_DONE))
-			print_error(dat->input_tmp);
-		else if (graph->nb_nodes == 0)
-			ft_putendl("ERROR: no room defined");
-		else if (graph->nb_nodes == 1)
-			ft_putendl("ERROR: only one room defined");
-		else if (dat->start == NULL)
-			ft_putendl("ERROR: no start defined");
-		else if (dat->end == NULL)
-			ft_putendl("ERROR: no end defined");
-		else if (graph->nb_paths == 0)
-			ft_putendl("ERROR: no path found");
-	}
+	if (BIS_SET(dat->flags, PRINT_ERRORS))
+		errors_details(dat, graph, step);
 	else
 		ft_putendl("ERROR");
 	while (get_next_line(STDIN_FILENO, &(dat->buff)) > 0)
@@ -73,29 +74,35 @@ static void		exit_error(t_pdata *dat, t_lgraph *graph)
 	ft_lstdel(&(dat->input_tmp), &ft_delcontent);
 	if (BIS_SET(graph->flags, ALLOCATED_MEMORY))
 		del_graph(graph);
-	exit(ERROR);
+	return (ERROR);
 }
 
-static void		check_options(int argc, char **argv, t_pdata *dat)
+static void		check_options(int ac, char **av, t_pdata *dat)
 {
-	while (argc-- > 1)
+	int		i;
+	int		err;
+
+	while (ac-- > 1)
 	{
-		if (argv[argc][0] == '-' && argv[argc][1] == 'o')
-			BSET(dat->flags, ORIENTED_GRAPH);
-		else if (argv[argc][0] == '-' && argv[argc][1] == 'p')
-			BSET(dat->flags, PRINT_PATHS);
-		else if (argv[argc][0] == '-' && argv[argc][1] == 'd')
-			BSET(dat->flags, PRINT_IF_ERROR);
-		else if (argv[argc][0] == '-' && argv[argc][1] == 'v')
+		if (av[ac][0] == '-')
 		{
-			BSET(dat->flags, PRINT_PATHS);
-			BSET(dat->flags, VERBOSE);
+			i = 0;
+			while (av[ac][++i] && (err = 0) == 0)
+			{
+				av[ac][i] == 'o' ? BSET(dat->flags, ORIENTED_GRAPH): err++;
+				av[ac][i] == 'l' ? BSET(dat->flags, PRINT_LINKS) : err++;
+				av[ac][i] == 'p' ? BSET(dat->flags, PRINT_PATHS) : err++;
+				av[ac][i] == 'd' ? BSET(dat->flags, PRINT_ERRORS) : err++;
+				av[ac][i] == 'v' ? BSET(dat->flags, VERBOSE) : err++;
+				av[ac][i] == 'v' ? BSET(dat->flags, PRINT_PATHS) : (void)err;
+				av[ac][i] == 'i' ? BSET(dat->flags, NO_INPUT_PRINT) : err++;
+				av[ac][i] == 's' ? BSET(dat->flags, NO_SOLVE) : err++;
+				if (err == NB_OPTIONS)
+					ft_printf("Ignored option: '%c'\n", av[ac][i]);
+			}
 		}
 		else
-		{
-			ft_printf("Unknown option: '%s'\n", argv[argc]);
-			exit(ERROR);
-		}
+			ft_printf("Ignored option: '%s'\n", av[ac]);
 	}
 }
 
@@ -104,22 +111,25 @@ int				main(int argc, char **argv)
 	t_lgraph	graph;
 	t_pdata		dat;
 
-	init_main_data(&dat, &graph);
+	ft_bzero(&graph, sizeof(graph));
+	ft_bzero(&dat, sizeof(dat));
 	check_options(argc, argv, &dat);
 	get_ants(&dat, &graph);
-	while (!BIS_SET(dat.flags, INPUT_ERROR))
+	while (!BIS_SET(dat.flags, INPUT_ERROR) && !BIS_SET(dat.flags, PARSE_OK))
 		parse_input(&dat, &graph);
 	if (pre_check(&dat, &graph) == ERROR)
-		exit_error(&dat, &graph);
+		return (end_error(&dat, &graph, 1));
 	get_paths(&graph);
-	if (BIS_SET(graph.flags, PATH_FOUND))
+	if (BIS_SET(graph.flags, PATH_FOUND) && !BIS_SET(dat.flags, NO_INPUT_PRINT))
 		print_input(dat.input_tmp);
-	ft_lstdel(&(dat.input_tmp), &ft_delcontent);
-	if (graph.nb_paths == 0)
-		exit_error(&dat, &graph);
+	if (!BIS_SET(graph.flags, PATH_FOUND))
+		return (end_error(&dat, &graph, 2));
+	if (BIS_SET(dat.flags, PRINT_LINKS))
+		print_links(&graph);
 	if (BIS_SET(dat.flags, PRINT_PATHS))
 		print_paths(&graph);
-	cross_paths(&graph, &dat);
+	if (!BIS_SET(dat.flags, NO_SOLVE))
+		cross_paths(&graph, &dat);
 	del_graph(&graph);
 	return (SUCCESS);
 }

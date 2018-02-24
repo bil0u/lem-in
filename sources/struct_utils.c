@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:42:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/15 18:07:55 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/24 14:33:13 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static void		init_buffers(t_lgraph *g)
 	max_p = NB_PATHS_MAX;
 	n = g->nb_nodes;
 	g->paths = init_matrix(max_p, n);
+	g->state = init_matrix(max_p, n);
 	i = max_p;
 	while (i--)
 		ft_memset(g->paths[i], NONE, sizeof(**(g->paths)) * n);
@@ -90,7 +91,10 @@ void			del_graph(t_lgraph *graph)
 
 	i = NB_PATHS_MAX;
 	while (i-- > 0)
+	{
 		ft_memdel((void **)&(graph->paths[i]));
+		ft_memdel((void **)&(graph->state[i]));
+	}
 	i = graph->nb_nodes;
 	while (i-- > 0)
 	{
@@ -98,6 +102,7 @@ void			del_graph(t_lgraph *graph)
 		ft_memdel((void **)&(graph->nodes[i]));
 		ft_memdel((void **)&(graph->links[i]));
 	}
+	ft_memdel((void **)&(graph->state));
 	ft_memdel((void **)&(graph->nodes));
 	ft_memdel((void **)&(graph->links));
 	ft_memdel((void **)&(graph->ant_no));

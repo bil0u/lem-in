@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 04:39:09 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/21 19:07:57 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/24 16:32:16 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,27 +62,24 @@ static void		update_path(t_lgraph *g, t_pdata *d, int p_no, int i)
 
 void			cross_paths(t_lgraph *graph, t_pdata *dat)
 {
+	int		i;
 	int		curr_path;
 	int		path_len;
 
 	ft_putchar('\n');
-	graph->state = init_matrix(graph->nb_paths, graph->nb_nodes);
 	graph->ants_start = graph->nb_ants;
+	i = 1;
 	while (graph->ants_end < graph->nb_ants)
 	{
-		curr_path = 0;
-		while (curr_path < graph->nb_paths)
+		curr_path = -1;
+		while (++curr_path < graph->nb_paths)
 		{
 			if ((path_len = handle_directmap(graph, dat, curr_path)) > 0)
 				update_path(graph, dat, curr_path, path_len - 1);
 			if (BIS_SET(dat->flags, VERBOSE))
-				print_path_state(graph, graph->paths[curr_path], curr_path);
-			curr_path++;
+				print_path_state(graph, graph->paths[curr_path], curr_path, i);
 		}
-		ft_putchar('\n');
+		!BIS_SET(dat->flags, VERBOSE) ? ft_putchar('\n') : (void)i;
+		i++;
 	}
-	curr_path = graph->nb_paths;
-	while (curr_path--)
-		ft_memdel((void **)&(graph->state[curr_path]));
-	ft_memdel((void **)&(graph->state));
 }

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/07 22:50:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/24 18:01:51 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/26 14:35:22 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,26 +17,25 @@
 
 static int		is_room(t_pdata *dat)
 {
-	char	*tmp;
 	int		name_len;
+	char	*token;
+	char	*tmp;
 
-	if ((tmp = ft_strchr(dat->buff, ' ')) == NULL)
+	if (dat->buff[0] == 'L' || (token = ft_nextws(dat->buff, FALSE)) == NULL)
 		return (FALSE);
-	name_len = tmp - dat->buff;
-	if (ft_strnstr(dat->buff, "-", name_len) || dat->buff[0] == 'L')
+	name_len = token - dat->buff;
+	if (ft_strnchr(dat->buff, '-', name_len))
 		return (FALSE);
-	dat->tmp_x = atoi_chr(&tmp);
-	if (tmp[0] != ' ')
-	{
-		dat->tmp_x = 0;
+	if ((tmp = ft_strchr(token, '-')) && ft_isdigit(tmp[1]) == FALSE)
 		return (FALSE);
-	}
-	dat->tmp_y = atoi_chr(&tmp);
-	if (tmp[0] != '\0')
-	{
-		dat->tmp_y = 0;
+	dat->tmp_x = atoi_chr(&token);
+	if (!ft_iswhitespace(token[0]))
 		return (FALSE);
-	}
+	if ((tmp = ft_strchr(token, '-')) && ft_isdigit(tmp[1]) == FALSE)
+		return (FALSE);
+	dat->tmp_y = atoi_chr(&token);
+	if (token[0] != '\0')
+		return (FALSE);
 	dat->to_save = ft_strndup(dat->buff, name_len);
 	return (TRUE);
 }

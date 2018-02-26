@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:36:05 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/24 18:31:44 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/26 15:00:09 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,9 @@ typedef struct	s_lgraph
 # define VERBOSE (1 << 10)
 # define NO_INPUT_PRINT (1 << 11)
 # define NO_SOLVE (1 << 12)
+# define UNIQ_PATH (1 << 13)
 
-# define NB_OPTIONS 7
+# define NB_OPTIONS 8
 
 typedef struct	s_pdata
 {

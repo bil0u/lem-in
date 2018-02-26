@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 19:27:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/24 18:36:40 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/26 15:28:22 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,30 +65,28 @@ static void		find_shortest_path(t_lgraph *g)
 	}
 }
 
-void			get_paths(t_lgraph *graph)
+void			get_paths(t_pdata *dat, t_lgraph *graph)
 {
 	int		tmp;
-	int		still_optimal;
+	int		optimal;
 	int		cumul;
 	int		curr;
 
 	tmp = graph->nb_links;
 	cumul = 0;
-	still_optimal = TRUE;
-	while (still_optimal)
+	optimal = TRUE;
+	while (optimal)
 	{
 		load_input(graph);
 		find_shortest_path(graph);
 		if (!BIS_SET(graph->flags, END_FOUND))
 			break ;
 		curr = last_path_len(graph);
-		still_optimal = graph->nb_ants - cumul > cumul - curr ? TRUE : FALSE;
-		still_optimal = graph->nb_paths < NB_PATHS_MAX ? still_optimal : FALSE;
-		if (still_optimal)
-		{
-			save_path(graph, curr, &still_optimal);
-			cumul += curr;
-		}
+		optimal = graph->nb_ants - cumul > cumul - curr ? TRUE : FALSE;
+		optimal = graph->nb_paths < NB_PATHS_MAX ? optimal : FALSE;
+		optimal ? save_path(graph, curr, &optimal) : (void)optimal;
+		optimal ? cumul += curr : (void)optimal;
+		optimal = BIS_SET(dat->flags, UNIQ_PATH) ? FALSE : optimal;
 	}
 	graph->nb_paths > 0 ? BSET(graph->flags, PATH_FOUND) : (void)tmp;
 	graph->nb_links = tmp;

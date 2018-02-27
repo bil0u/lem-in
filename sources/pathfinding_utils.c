@@ -6,11 +6,12 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 23:37:08 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/26 15:42:16 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/27 01:40:04 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
+#include <unistd.h>
 
 void		load_input(t_lgraph *g)
 {
@@ -24,11 +25,13 @@ void		load_input(t_lgraph *g)
 	g->nb_loops = g->nb_nodes;
 	g->nb_links < g->nb_nodes ? g->nb_loops = g->nb_links + 1 : (void)g;
 	g->curr_node = 0;
-	g->flags = 0;
+	BUNSET(g->flags, END_FOUND);
 }
 
 int			pre_check(t_pdata *dat, t_lgraph *graph)
 {
+	if (!BIS_SET(dat->flags, EOL_REACHED))
+		gnl_end(STDIN_FILENO);
 	if (graph->nb_ants < 1 || graph->nb_nodes < 2 || graph->nb_links < 1)
 		return (ERROR);
 	else if (dat->start == NULL || dat->end == NULL || dat->start == dat->end)

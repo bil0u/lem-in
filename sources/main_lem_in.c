@@ -6,12 +6,11 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:37:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/26 16:28:02 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/27 01:59:00 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
-#include <stdlib.h>
 #include <limits.h>
 #include "lem_in.h"
 #include "parsing.h"
@@ -43,34 +42,28 @@ static void		get_ants(t_pdata *dat, t_lgraph *graph)
 		BSET(dat->flags, INPUT_ERROR);
 }
 
-static void		errors_details(t_pdata *dat, t_lgraph *graph, int step)
+static void		errors_details(t_pdata *d, t_lgraph *g)
 {
-	if (step == 2)
+	if (BIS_SET(d->flags, PARSE_OK))
 		ft_putendl(ERR_NOPATH_MSG);
-	else if (graph->nb_nodes == 0)
-		ft_putendl(ERR_NOROOM_MSG);
-	else if (graph->nb_nodes == 1)
-		ft_putendl(ERR_ONEROOM_MSG);
-	else if (dat->start == NULL)
-		ft_putendl(ERR_NOSTART_MSG);
-	else if (dat->end == NULL)
-		ft_putendl(ERR_NOEND_MSG);
-	else if (dat->end && dat->start == dat->end)
-		ft_putendl(ERR_SEQE_MSG);
-	else if (!BIS_SET(dat->flags, PARSE_OK) && BIS_SET(dat->flags, INPUT_ERROR))
-		print_error(dat->input_tmp);
-	else if (BIS_SET(dat->flags, PARSE_OK) && graph->nb_links == 0)
-		ft_putendl(ERR_NOLINK_MSG);
+	else
+	{
+		!BIS_SET(d->flags, EOL_REACHED) ? print_error(d) : (void)d;
+		g->nb_nodes == 0 ? ft_putendl(ERR_NOROOM_MSG) : (void)d;
+		g->nb_nodes == 1 ? ft_putendl(ERR_ONEROOM_MSG) : (void)d;
+		d->start == NULL ? ft_putendl(ERR_NOSTART_MSG) : (void)d;
+		d->end == NULL ? ft_putendl(ERR_NOEND_MSG) : (void)d;
+		d->end && d->start == d->end ? ft_putendl(ERR_SEQE_MSG) : (void)d;
+		g->nb_links == 0 ? ft_putendl(ERR_NOLINK_MSG) : (void)d;
+	}
 }
 
-static int		end_error(t_pdata *dat, t_lgraph *graph, int step)
+static int		end_error(t_pdata *dat, t_lgraph *graph)
 {
 	if (BIS_SET(dat->flags, PRINT_ERRORS))
-		errors_details(dat, graph, step);
+		errors_details(dat, graph);
 	else
 		ft_putendl(ERR_MSG);
-	while (get_next_line(STDIN_FILENO, &(dat->buff)) > 0)
-		ft_strdel(&(dat->buff));
 	ft_lstdel(&(dat->input_tmp), &ft_delcontent);
 	if (BIS_SET(graph->flags, ALLOCATED_MEMORY))
 		del_graph(graph);
@@ -110,15 +103,15 @@ int				main(int argc, char **argv)
 	ft_bzero(&dat, sizeof(dat));
 	check_options(argc, argv, &dat);
 	get_ants(&dat, &graph);
-	while (!BIS_SET(dat.flags, INPUT_ERROR) && !BIS_SET(dat.flags, PARSE_OK))
+	while (!BIS_SET(dat.flags, INPUT_ERROR) && !BIS_SET(dat.flags, EOL_REACHED))
 		parse_input(&dat, &graph);
 	if (pre_check(&dat, &graph) == ERROR)
-		return (end_error(&dat, &graph, 1));
+		return (end_error(&dat, &graph));
 	get_paths(&dat, &graph);
+	if (!BIS_SET(graph.flags, PATH_FOUND))
+		return (end_error(&dat, &graph));
 	if (BIS_SET(graph.flags, PATH_FOUND) && !BIS_SET(dat.flags, NO_INPUT_PRINT))
 		print_input(dat.input_tmp);
-	if (!BIS_SET(graph.flags, PATH_FOUND))
-		return (end_error(&dat, &graph, 2));
 	if (BIS_SET(dat.flags, PRINT_LINKS))
 		print_links(&graph);
 	if (BIS_SET(dat.flags, PRINT_PATHS))

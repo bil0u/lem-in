@@ -6,14 +6,14 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 11:58:26 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/12 20:55:14 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/27 00:47:53 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSING_H
 # define PARSING_H
 
-int		atoi_chr(char **str);
+int		set_error(t_pdata *dat, int set_input_err, char *error);
 int		cmp_name(t_room *room, t_pdata *data_ref);
 int		cmp_coord(t_room *room, t_pdata *data_ref);
 void	apply_commands(t_pdata *dat);

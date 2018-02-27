@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 17:36:05 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/26 15:00:09 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/27 00:55:25 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,16 +59,17 @@ typedef struct	s_lgraph
 # define INPUT_ERROR (1 << 2)
 # define ROOM_DONE (1 << 3)
 # define CUSTOM_DIST (1 << 4)
-# define PARSE_OK (1 << 5)
+# define EOL_REACHED (1 << 5)
+# define PARSE_OK (1 << 6)
 
-# define ORIENTED_GRAPH (1 << 6)
-# define PRINT_LINKS (1 << 7)
-# define PRINT_PATHS (1 << 8)
-# define PRINT_ERRORS (1 << 9)
-# define VERBOSE (1 << 10)
-# define NO_INPUT_PRINT (1 << 11)
-# define NO_SOLVE (1 << 12)
-# define UNIQ_PATH (1 << 13)
+# define ORIENTED_GRAPH (1 << 7)
+# define PRINT_LINKS (1 << 8)
+# define PRINT_PATHS (1 << 9)
+# define PRINT_ERRORS (1 << 10)
+# define VERBOSE (1 << 11)
+# define NO_INPUT_PRINT (1 << 12)
+# define NO_SOLVE (1 << 13)
+# define UNIQ_PATH (1 << 14)
 
 # define NB_OPTIONS 8
 
@@ -79,7 +80,7 @@ typedef struct	s_pdata
 	int			tmp_dist;
 	int			flags;
 	char		*buff;
-	char		*error;
+	char		*err_msg;
 	char		*to_save;
 	t_list		*nodes_tmp;
 	t_list		*input_tmp;

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/16 12:14:27 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/26 16:14:43 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/27 01:14:39 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,13 +105,13 @@ void	print_input(t_list *input)
 	ft_lstdel(&input, &ft_delcontent);
 }
 
-void	print_error(t_list *input)
+void	print_error(t_pdata *dat)
 {
 	int		line;
 	t_list	*curr;
 	char	*err;
 
-	curr = input;
+	curr = dat->input_tmp;
 	line = 1;
 	while (curr->next != NULL)
 	{
@@ -120,4 +120,8 @@ void	print_error(t_list *input)
 	}
 	if ((err = (char *)curr->content) != NULL)
 		ft_printf(ERR_LINE_MSG, line, err);
+	if (dat->err_msg != NULL)
+		ft_printf(" --> %s\n", dat->err_msg);
+	else
+		ft_putchar('\n');
 }

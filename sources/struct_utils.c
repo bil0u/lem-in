@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:42:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/24 18:33:49 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/27 02:29:13 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,10 @@ void			init_graph(t_pdata *dat, t_lgraph *graph)
 	int		i;
 
 	init_buffers(graph);
-	i = dat->end ? graph->nb_nodes - 2 : graph->nb_nodes - 1;
-	graph->nodes[0] = dat->start;
-	graph->nodes[graph->nb_nodes - 1] = dat->end;
+	i = (dat->end ? graph->nb_nodes - 2 : graph->nb_nodes - 1);
+	dat->start ? (void)i : i--;
+	dat->start ? graph->nodes[0] = dat->start : (void)i;
+	dat->end ? graph->nodes[graph->nb_nodes - 1] = dat->end : (void)i;
 	tmp = dat->nodes_tmp;
 	while (tmp != NULL)
 	{

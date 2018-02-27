@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/16 12:28:08 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/26 16:15:54 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/27 02:13:25 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,19 @@
 # define ERR_SEQE_MSG "ERROR: start & end cannot be the same"
 # define ERR_NOLINK_MSG "ERROR: no link defined"
 # define ERR_NOPATH_MSG "ERROR: no path beetween start & end rooms"
-# define ERR_LINE_MSG "ERROR on line {yellow}%d{eoc}: '{red}%s{eoc}'\n"
+# define ERR_LINE_MSG "ERROR on line {yellow}%d{eoc}: '{red}%s{eoc}'"
+
+# define ERR_LNAME_MSG "room name cannot begin with 'L'"
+# define ERR_NOCOORD_MSG "room coordinates not defined"
+# define ERR_SEPNAME_MSG "room name cannot contain '-'"
+# define ERR_BADCOORD_MSG "room coordinates not valid"
+# define ERR_ONECOORD_MSG "missing one room coordinate"
+# define ERR_OVERCOORD_MSG "more than 2 valid coordinates"
+# define ERR_BADLINKNAME_MSG "link refers to some undefined room(s)"
+# define ERR_NOLINKNAME_MSG "no room name given for this link"
+# define ERR_BADLINKVAL_MSG "link value not valid"
+# define ERR_MULTSEP_MSG "multiple separator unallowed"
+# define ERR_UNKNLINE_MSG "unknown line"
 
 # define IGNORED_MSG "Ignored option: '%c'\n"
 
@@ -52,6 +64,6 @@ void	print_links(t_lgraph *graph);
 void	print_path_state(t_lgraph *graph, int *pos, int p_no, int round_no);
 void	print_paths(t_lgraph *graph);
 void	print_input(t_list *input);
-void	print_error(t_list *input);
+void	print_error(t_pdata *dat);
 
 #endif

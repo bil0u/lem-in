@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/07 22:50:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/26 14:35:22 by upopee           ###   ########.fr       */
+/*   Updated: 2018/02/27 02:23:07 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "lem_in.h"
 #include "parsing.h"
 #include "struct_utils.h"
+#include "print_utils.h"
 
 static int		is_room(t_pdata *dat)
 {
@@ -21,21 +22,25 @@ static int		is_room(t_pdata *dat)
 	char	*token;
 	char	*tmp;
 
-	if (dat->buff[0] == 'L' || (token = ft_nextws(dat->buff, FALSE)) == NULL)
-		return (FALSE);
+	if (dat->buff[0] == 'L')
+		return (set_error(dat, FALSE, ERR_LNAME_MSG));
+	if ((token = ft_nextws(dat->buff, FALSE)) == NULL)
+		return (set_error(dat, FALSE, ERR_NOCOORD_MSG));
 	name_len = token - dat->buff;
 	if (ft_strnchr(dat->buff, '-', name_len))
-		return (FALSE);
-	if ((tmp = ft_strchr(token, '-')) && ft_isdigit(tmp[1]) == FALSE)
-		return (FALSE);
-	dat->tmp_x = atoi_chr(&token);
+		return (set_error(dat, FALSE, ERR_SEPNAME_MSG));
+	if (((tmp = ft_strchr(token, '-')) || (tmp = ft_strchr(token, '+')))
+		&& ft_isdigit(tmp[1]) == FALSE)
+		return (set_error(dat, FALSE, ERR_BADCOORD_MSG));
+	dat->tmp_x = ft_atoi_chr(&token);
 	if (!ft_iswhitespace(token[0]))
-		return (FALSE);
-	if ((tmp = ft_strchr(token, '-')) && ft_isdigit(tmp[1]) == FALSE)
-		return (FALSE);
-	dat->tmp_y = atoi_chr(&token);
+		return (set_error(dat, FALSE, ERR_ONECOORD_MSG));
+	if (((tmp = ft_strchr(token, '-')) || (tmp = ft_strchr(token, '+')))
+		&& ft_isdigit(tmp[1]) == FALSE)
+		return (set_error(dat, FALSE, ERR_BADCOORD_MSG));
+	dat->tmp_y = ft_atoi_chr(&token);
 	if (token[0] != '\0')
-		return (FALSE);
+		return (set_error(dat, FALSE, ERR_OVERCOORD_MSG));
 	dat->to_save = ft_strndup(dat->buff, name_len);
 	return (TRUE);
 }
@@ -98,11 +103,9 @@ static void		get_linkdata(t_pdata *dat, t_lgraph *graph, char *sep)
 			if (!BIS_SET(dat->flags, ORIENTED_GRAPH))
 				graph->links[*j][*i] = (*i == *j) ? 0 : dat->tmp_dist;
 		}
-		else
-			BSET(dat->flags, INPUT_ERROR);
 	}
 	else
-		BSET(dat->flags, INPUT_ERROR);
+		set_error(dat, TRUE, ERR_MULTSEP_MSG);
 }
 
 void			parse_input(t_pdata *d, t_lgraph *g)
@@ -115,20 +118,18 @@ void			parse_input(t_pdata *d, t_lgraph *g)
 		{
 			BSET(d->flags, ROOM_DONE);
 			ft_strdel(&(d->to_save));
-			g->nb_nodes > 1 ? init_graph(d, g) : BSET(d->flags, INPUT_ERROR);
-			if (BIS_SET(d->flags, INPUT_ERROR))
-				return ;
+			g->nb_nodes > 0 ? init_graph(d, g) : (void)d;
 		}
 		if (d->buff[0] == '#')
 			get_hashdata(d);
 		else if (!BIS_SET(d->flags, ROOM_DONE))
 			get_roomdata(d, g);
-		else if (ft_strchr(d->buff, '-') && g->nb_nodes > 1)
+		else if (ft_strchr(d->buff, '-'))
 			get_linkdata(d, g, ft_strchr(d->buff, '-'));
 		else
-			BSET(d->flags, INPUT_ERROR);
+			set_error(d, TRUE, NULL);
 		d->buff = NULL;
 	}
 	else
-		BSET(d->flags, PARSE_OK);
+		BSET(d->flags, EOL_REACHED);
 }

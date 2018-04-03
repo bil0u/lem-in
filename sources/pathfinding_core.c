@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 19:27:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/27 02:01:26 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/03 20:48:24 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void			get_paths(t_pdata *dat, t_lgraph *graph)
 		curr = last_path_len(graph);
 		optimal = graph->nb_ants - cumul > cumul - curr ? TRUE : FALSE;
 		optimal = graph->nb_paths < NB_PATHS_MAX ? optimal : FALSE;
-		optimal ? save_path(graph, curr, &optimal) : (void)optimal;
+		optimal ? save_path(graph, curr) : (void)optimal;
 		optimal ? cumul += curr : (void)optimal;
 		optimal = BIS_SET(dat->flags, UNIQ_PATH) ? FALSE : optimal;
 	}

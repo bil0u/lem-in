@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 23:37:08 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/27 01:40:04 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/03 20:48:12 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,38 +57,27 @@ int			last_path_len(t_lgraph *graph)
 	return (path_len);
 }
 
-static int	check_overlap(t_lgraph *g)
+static void	remove_to_links(int room, int **links, int nb_nodes)
 {
-	int		curr_node;
-	int		prev_node;
-
-	curr_node = g->nb_nodes - 1;
-	while (curr_node != 0)
-	{
-		prev_node = g->previous[curr_node];
-		if (g->used[curr_node] == TRUE && curr_node < g->nb_nodes - 1)
-			return (FALSE);
-		curr_node = prev_node;
-	}
-	return (TRUE);
+	while (nb_nodes-- > 0)
+		if (links[nb_nodes][room] > 0)
+		{
+			links[nb_nodes][room] = -(links[nb_nodes][room]);
+		}
 }
 
-void		save_path(t_lgraph *g, int path_len, int *optimal)
+void		save_path(t_lgraph *g, int path_len)
 {
 	int		curr_node;
 	int		prev_node;
 
-	if ((*optimal = check_overlap(g)) == FALSE)
-		return ;
 	curr_node = g->nb_nodes - 1;
 	g->paths_len[g->nb_paths] = path_len;
 	while (curr_node != 0)
 	{
 		prev_node = g->previous[curr_node];
 		g->paths[g->nb_paths][path_len - 1] = curr_node;
-		g->used[curr_node] = TRUE;
-		g->links[prev_node][curr_node] = -g->links[prev_node][curr_node];
-		g->links[curr_node][prev_node] = -g->links[curr_node][prev_node];
+		remove_to_links(prev_node, g->links, g->nb_nodes);
 		g->nb_links--;
 		path_len--;
 		curr_node = prev_node;

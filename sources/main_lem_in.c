@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:37:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/27 01:59:00 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/03 19:57:38 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ int				main(int argc, char **argv)
 	if (pre_check(&dat, &graph) == ERROR)
 		return (end_error(&dat, &graph));
 	get_paths(&dat, &graph);
+	ft_printf("{yellow}Nombre de chemins :{eoc} %d\n", graph.nb_paths);
 	if (!BIS_SET(graph.flags, PATH_FOUND))
 		return (end_error(&dat, &graph));
 	if (BIS_SET(graph.flags, PATH_FOUND) && !BIS_SET(dat.flags, NO_INPUT_PRINT))

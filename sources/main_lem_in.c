@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/05 10:37:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/03 19:57:38 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/11 20:41:10 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,14 +107,14 @@ int				main(int argc, char **argv)
 		parse_input(&dat, &graph);
 	if (pre_check(&dat, &graph) == ERROR)
 		return (end_error(&dat, &graph));
-	get_paths(&dat, &graph);
-	ft_printf("{yellow}Nombre de chemins :{eoc} %d\n", graph.nb_paths);
+	get_paths(&dat, &graph, graph.nb_links);
 	if (!BIS_SET(graph.flags, PATH_FOUND))
 		return (end_error(&dat, &graph));
-	if (BIS_SET(graph.flags, PATH_FOUND) && !BIS_SET(dat.flags, NO_INPUT_PRINT))
+	if (!BIS_SET(dat.flags, NO_INPUT_PRINT))
 		print_input(dat.input_tmp);
 	if (BIS_SET(dat.flags, PRINT_LINKS))
 		print_links(&graph);
+	ft_printf(SLV_HEAD, graph.nb_paths, graph.nb_loops);
 	if (BIS_SET(dat.flags, PRINT_PATHS))
 		print_paths(&graph);
 	if (!BIS_SET(dat.flags, NO_SOLVE))

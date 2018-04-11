@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/08 03:33:19 by upopee            #+#    #+#             */
-/*   Updated: 2018/02/27 02:29:49 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/11 20:40:52 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int		get_distance(t_pdata *dat, t_lgraph *graph, int x, int y)
 	char	*node_name;
 
 	if (((i = -1) == -1) && (graph->nb_nodes == 0 || (x <= 0 || y <= 0)))
-		return (set_error(dat, TRUE, ERR_NOLINKNAME_MSG));
+		return (set_error(dat, TRUE, ERR_NOLKNAME_MSG));
 	dat->tmp_x = -1;
 	dat->tmp_y = -1;
 	while (++i < graph->nb_nodes && (dat->tmp_x == -1 || dat->tmp_y == -1))
@@ -69,10 +69,10 @@ int		get_distance(t_pdata *dat, t_lgraph *graph, int x, int y)
 			dat->tmp_y = i;
 	}
 	if ((dat->tmp_dist = 1) == 1 && (dat->tmp_x == -1 || dat->tmp_y == -1))
-		return (set_error(dat, TRUE, ERR_BADLINKNAME_MSG));
+		return (set_error(dat, TRUE, ERR_BADLKNAME_MSG));
 	if (dat->buff[x + y + 1] != '\0'
 		&& (dat->tmp_dist = ft_atoi(dat->buff + x + y + 1)) < 1)
-		return (set_error(dat, TRUE, ERR_BADLINKVAL_MSG));
+		return (set_error(dat, TRUE, ERR_BADLKVAL_MSG));
 	dat->tmp_dist > 1 ? BSET(dat->flags, CUSTOM_DIST) : (void)x;
 	return (TRUE);
 }
